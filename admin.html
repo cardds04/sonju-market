@@ -25,6 +25,12 @@
 
   .row { background: #fff; border-radius: 14px; padding: 12px; display: flex; gap: 12px; align-items: center; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.05); cursor: pointer; border-left: 6px solid transparent; }
   .row.new { border-left-color: #ef4444; }
+  .row.cancelreq { border-left-color: #dc2626; background: #fef2f2; }
+  .cbox { background: #fef2f2; border: 2px solid #fca5a5; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .cbox-t { font-size: 18px; font-weight: 800; color: #dc2626; }
+  .cbox-m { font-size: 15px; color: #64748b; margin: 6px 0 12px; }
+  .cbox-cancel { width: 100%; min-height: 52px; border: none; border-radius: 10px; background: #dc2626; color: #fff; font-size: 17px; font-weight: 800; cursor: pointer; }
+  .cbox-keep { width: 100%; min-height: 46px; margin-top: 8px; border: 2px solid #cbd5e1; border-radius: 10px; background: #fff; color: #334155; font-size: 15px; font-weight: 700; cursor: pointer; }
   .row .thumb { width: 68px; height: 68px; border-radius: 10px; object-fit: cover; flex: 0 0 68px; background: #f1f5f9; }
   .row .info { flex: 1; min-width: 0; }
   .row .top { display: flex; align-items: center; gap: 8px; }
@@ -103,25 +109,29 @@
     if (s < 60) return '방금'; if (s < 3600) return Math.floor(s/60)+'분 전'; if (s < 86400) return Math.floor(s/3600)+'시간 전'; return Math.floor(s/86400)+'일 전'; }
   function money(n) { return n == null ? '-' : Number(n).toLocaleString('ko-KR') + '원'; }
   function pillColor(k) { return { requested:'#fee2e2;#b91c1c', checking:'#fef9c3;#a16207', quoted:'#dcfce7;#15803d',
-    ordered:'#dbeafe;#1d4ed8', shipping:'#e0e7ff;#4338ca', arrived:'#fed7aa;#c2410c', done:'#f1f5f9;#475569' }[k] || '#f1f5f9;#475569'; }
+    ordered:'#dbeafe;#1d4ed8', shipping:'#e0e7ff;#4338ca', arrived:'#fed7aa;#c2410c', done:'#f1f5f9;#475569', canceled:'#fee2e2;#b91c1c' }[k] || '#f1f5f9;#475569'; }
 
   function tabMatch(o, f) { if (f==='all') return true; if (f==='new') return o.status==='requested';
-    if (f==='done') return o.status==='done'; return o.status!=='requested' && o.status!=='done'; }
+    if (f==='done') return o.status==='done' || o.status==='canceled';
+    return o.status!=='requested' && o.status!=='done' && o.status!=='canceled'; }
 
   function render() {
     var all = Store.orders();
     var cn = { n:0, d:0, done:0 };
-    all.forEach(function (o) { if (o.status==='requested') cn.n++; else if (o.status==='done') cn.done++; else cn.d++; });
+    all.forEach(function (o) { if (o.status==='requested') cn.n++; else if (o.status==='done'||o.status==='canceled') cn.done++; else cn.d++; });
     $('c-new').textContent = cn.n; $('c-doing').textContent = cn.d; $('c-done').textContent = cn.done; $('c-all').textContent = all.length;
     var nb = $('newBadge'); if (cn.n > 0) { nb.style.display='inline-block'; nb.textContent='새 주문 '+cn.n; } else nb.style.display='none';
 
     var rows = all.filter(function (o) { return tabMatch(o, curFilter); });
     if (rows.length === 0) { $('list').innerHTML = '<div class="empty">주문이 없어요</div>'; return; }
     $('list').innerHTML = rows.map(function (o) {
-      var s = Store.stage(o.status); var pc = pillColor(o.status).split(';'); var isNew = o.status==='requested' ? ' new' : '';
-      return '<div class="row'+isNew+'" data-id="'+o.id+'"><img class="thumb" src="'+o.photo+'" alt="">' +
+      var s = Store.stage(o.status); var pc = pillColor(o.status).split(';');
+      var creq = (o.cancelRequested && o.status!=='canceled');
+      var rowCls = o.status==='requested' ? ' new' : ''; if (creq) rowCls = ' cancelreq';
+      var creqPill = creq ? '<span class="stpill" style="background:#dc2626;color:#fff;margin-left:6px">🚫 취소요청</span>' : '';
+      return '<div class="row'+rowCls+'" data-id="'+o.id+'"><img class="thumb" src="'+o.photo+'" alt="">' +
         '<div class="info"><div class="top"><span class="seq">#'+o.seq+'</span><span class="cust">'+Store.profile().name+'</span></div>' +
-        '<div class="st"><span class="stpill" style="background:'+pc[0]+';color:'+pc[1]+'">'+s.emoji+' '+s.adminLabel+'</span></div>' +
+        '<div class="st"><span class="stpill" style="background:'+pc[0]+';color:'+pc[1]+'">'+s.emoji+' '+s.adminLabel+'</span>'+creqPill+'</div>' +
         '<div class="time">'+timeAgo(o.createdAt)+' · '+(o.itemName||'물건 미입력')+'</div></div></div>';
     }).join('');
     var rs = document.querySelectorAll('.row'); for (var i=0;i<rs.length;i++) rs[i].addEventListener('click', function(){ openDetail(this.getAttribute('data-id')); });
@@ -136,10 +146,21 @@
       var cur = o.status===st.key ? ' cur' : ''; var passed = (!cur && Store.stage(o.status).step > st.step) ? ' passed' : '';
       return '<button class="stage-btn'+cur+passed+'" data-st="'+st.key+'">'+st.emoji+'<br>'+st.adminLabel+'</button>';
     }).join('');
-    var curStep = Store.stage(o.status).step; var nextStage = STAGES[curStep + 1];
+    var curStep = Store.stage(o.status).step; var nextStage = (o.status==='canceled') ? null : STAGES[curStep + 1];
+
+    var cancelBox = '';
+    if (o.cancelRequested && o.status!=='canceled') {
+      cancelBox = '<div class="cbox"><div class="cbox-t">🚫 고객이 취소를 요청했어요</div>' +
+        '<div class="cbox-m">전화로 확인한 뒤 처리하세요. (' + p.phone + ')</div>' +
+        '<button class="cbox-cancel" id="cbCancel">❌ 취소 확정 (주문 취소)</button>' +
+        '<button class="cbox-keep" id="cbKeep">취소요청 해제 (계속 진행)</button></div>';
+    } else if (o.status==='canceled') {
+      cancelBox = '<div class="cbox"><div class="cbox-t">❌ 취소된 주문이에요</div>' +
+        '<button class="cbox-keep" id="cbRestore">취소 되돌리기 (접수 상태로)</button></div>';
+    }
 
     $('detailBody').innerHTML =
-      '<img class="dphoto" src="'+o.photo+'" alt="주문 사진">' +
+      '<img class="dphoto" src="'+o.photo+'" alt="주문 사진">' + cancelBox +
       '<div class="box"><h3>주문자</h3><div class="cust-line"><b>이름</b>'+p.name+'</div><div class="cust-line"><b>연락처</b>'+p.phone+'</div><div class="cust-line"><b>주소</b>'+p.address+'</div></div>' +
       '<div class="box"><h3>확인 & 금액 (고객에게 안내됨)</h3>' +
         '<label>물건 이름</label><input class="f" id="f-item" value="'+(o.itemName||'')+'" placeholder="예: 꽃무늬 봄 남방">' +
@@ -152,7 +173,8 @@
         '<button class="save-btn" id="saveBtn">저장만 하기</button></div>' +
       '<div class="box"><h3>주문 단계 (누르면 그 단계로)</h3><div class="stage-row">'+stageBtns+'</div>' +
         (nextStage ? '<button class="next-btn" id="nextBtn">▶ 다음: '+nextStage.emoji+' '+nextStage.adminLabel+'</button>' : '<button class="next-btn" disabled>완료된 주문</button>') +
-        '</div><button class="danger" id="delBtn">이 주문 삭제</button>';
+        '</div>' + (o.status!=='canceled' ? '<button class="danger" id="cancelBtn">❌ 이 주문 취소하기</button>' : '') +
+        '<button class="danger" id="delBtn">이 주문 완전 삭제</button>';
 
     $('detail').classList.add('on'); window.scrollTo(0,0); $('detail').scrollTop = 0; updateTotal();
 
@@ -168,7 +190,11 @@
     var sbs = document.querySelectorAll('.stage-btn');
     for (var k=0;k<sbs.length;k++) sbs[k].addEventListener('click', function(){ Store.setStatus(id, this.getAttribute('data-st')); toast('단계를 바꿨어요'); openDetail(id); });
     if (nextStage) $('nextBtn').addEventListener('click', function(){ Store.setStatus(id, nextStage.key); toast('▶ '+nextStage.adminLabel); openDetail(id); });
-    $('delBtn').addEventListener('click', function(){ if (confirm('이 주문을 삭제할까요?')) { Store.remove(id); $('detail').classList.remove('on'); render(); } });
+    $('delBtn').addEventListener('click', function(){ if (confirm('이 주문을 완전히 삭제할까요?')) { Store.remove(id); $('detail').classList.remove('on'); render(); } });
+    if ($('cancelBtn')) $('cancelBtn').addEventListener('click', function(){ if (confirm('이 주문을 취소 처리할까요?\n(전화로 확인한 뒤에 하세요)')) { Store.update(id,{cancelRequested:false}); Store.setStatus(id,'canceled'); toast('주문을 취소했어요'); openDetail(id); } });
+    if ($('cbCancel')) $('cbCancel').addEventListener('click', function(){ Store.update(id,{cancelRequested:false}); Store.setStatus(id,'canceled'); toast('취소 확정했어요'); openDetail(id); });
+    if ($('cbKeep')) $('cbKeep').addEventListener('click', function(){ Store.update(id,{cancelRequested:false}); toast('취소요청을 해제했어요'); openDetail(id); });
+    if ($('cbRestore')) $('cbRestore').addEventListener('click', function(){ Store.setStatus(id,'requested'); toast('접수 상태로 되돌렸어요'); openDetail(id); });
   }
   function updateTotal() { var pr = Number($('f-price') && $('f-price').value)||0; var fe = Number($('f-fee') && $('f-fee').value)||0; if ($('totalLine')) $('totalLine').textContent = '합계: '+money(pr+fe); }
   $('backBtn').addEventListener('click', function(){ $('detail').classList.remove('on'); render(); });

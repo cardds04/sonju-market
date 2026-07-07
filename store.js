@@ -38,7 +38,13 @@
     { label: '배송', emoji: '🚚', th: 4 },
     { label: '도착', emoji: '🏠', th: 5 }
   ];
+  // 취소 상태 (진행단계 아님 — 별도 처리)
+  var CANCELED = { key: 'canceled', step: -1, th: -1, adminLabel: '취소됨', userLabel: '취소됐어요', emoji: '❌',
+    userMsg: '이 주문은 취소됐어요.\n궁금하시면 전화 주세요.' };
+  // 아직 실제 구매 전이라 취소 가능한 단계
+  function cancelable(status) { return status === 'requested' || status === 'checking' || status === 'quoted'; }
   function stage(key) {
+    if (key === 'canceled') return CANCELED;
     for (var i = 0; i < STAGES.length; i++) if (STAGES[i].key === key) return STAGES[i];
     return STAGES[0];
   }
@@ -68,7 +74,7 @@
 
   var pollTimer = null;
   var Store = {
-    STAGES: STAGES, STEPPER: STEPPER, stage: stage, API_BASE: API_BASE,
+    STAGES: STAGES, STEPPER: STEPPER, stage: stage, cancelable: cancelable, API_BASE: API_BASE,
     onChange: function (fn) { listeners.push(fn); },
 
     init: function () {

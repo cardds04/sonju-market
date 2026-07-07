@@ -28,6 +28,17 @@
   .order-btn .t2 { font-size: clamp(18px, 5vw, 22px); font-weight: 500; opacity: .95; text-align: center; }
   input[type=file] { display: none; }
 
+  /* 주문 방법 안내 (그림) */
+  .howto { background: #fff; border-radius: 22px; padding: 18px 12px; margin-top: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.06); }
+  .howto .htline { font-size: clamp(20px, 5.4vw, 23px); font-weight: 800; color: #c2410c; text-align: center; margin-bottom: 16px; line-height: 1.4; }
+  .howto .steps3 { display: flex; align-items: flex-start; justify-content: space-between; }
+  .howto .s3 { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 30%; }
+  .howto .s3 .ic { font-size: 46px; line-height: 1; }
+  .howto .s3 .tx { font-size: clamp(16px, 4.4vw, 19px); font-weight: 700; text-align: center; line-height: 1.35; }
+  .howto .arrow3 { font-size: 24px; color: #FDBA74; padding-top: 14px; }
+
+  .cancel-tag { font-size: 18px; color: #dc2626; font-weight: 800; margin-top: 5px; }
+
   /* 당일처리 배너 */
   .promise { margin-top: 14px; background: #FEF3C7; border: 2px solid #FCD34D; border-radius: 18px;
     padding: 16px 18px; font-size: clamp(19px, 5.2vw, 22px); font-weight: 700; color: #92400e; text-align: center; line-height: 1.45; }
@@ -86,6 +97,14 @@
   .pay-row.total { font-size: 28px; font-weight: 800; border-top: 2px dashed #FDBA74; margin-top: 8px; padding-top: 12px; }
   .pay-acct { background: #fff; border-radius: 16px; padding: 16px; margin-top: 14px; font-size: 24px; font-weight: 700; text-align: center; }
 
+  /* 취소 요청 */
+  .cancel-req-btn { width: 100%; min-height: 74px; margin-top: 20px; border: 3px solid #fca5a5; border-radius: 20px; background: #fff; color: #dc2626; font-size: clamp(22px, 6vw, 25px); font-weight: 800; cursor: pointer; }
+  .cancel-req-btn:active { background: #fef2f2; }
+  .cb-note { text-align: center; font-size: 19px; color: #78716c; margin-top: 10px; line-height: 1.4; }
+  .cancel-box { background: #fef2f2; border: 3px solid #fca5a5; border-radius: 20px; padding: 22px; margin-top: 18px; text-align: center; }
+  .cancel-box .cb-t { font-size: clamp(24px, 6.5vw, 28px); font-weight: 800; color: #dc2626; }
+  .cancel-box .cb-m { font-size: 21px; color: #57534e; margin-top: 8px; line-height: 1.5; white-space: pre-line; }
+
   .sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); align-items: flex-end; z-index: 40; }
   .sheet.on { display: flex; }
   .sheet-inner { background: #fff; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 30px 30px 0 0; padding: 28px 22px calc(26px + env(safe-area-inset-bottom)); text-align: center; }
@@ -110,6 +129,18 @@
     <span class="t2">사진 고르기만 하면 돼요</span>
   </button>
   <input type="file" id="fileInput" accept="image/*">
+
+  <div class="howto">
+    <div class="htline">📸 휴대폰에서 캡쳐한 사진을<br>올려주세요</div>
+    <div class="steps3">
+      <div class="s3"><div class="ic">📱</div><div class="tx">① 마음에 든 옷<br>사진 찍기</div></div>
+      <div class="arrow3">▶</div>
+      <div class="s3"><div class="ic">⬆️</div><div class="tx">② 위 버튼 눌러<br>사진 올리기</div></div>
+      <div class="arrow3">▶</div>
+      <div class="s3"><div class="ic">🏠</div><div class="tx">③ 집에서<br>받기</div></div>
+    </div>
+  </div>
+
   <div class="promise" id="promise"></div>
 
   <div class="section-title">내 주문</div>
@@ -186,16 +217,17 @@
     var s = Store.stage(o.status);
     var cls = (o.status === 'arrived') ? ' hot' : (o.status === 'quoted' ? ' money' : '');
     var priceTag = (o.status === 'quoted' && o.price != null) ? '<div class="price-tag">💰 ' + money(total(o)) + '</div>' : '';
+    var cancelTag = (o.cancelRequested && o.status !== 'canceled') ? '<div class="cancel-tag">🚫 취소 요청됨 (전화 확인 중)</div>' : '';
     return '<div class="card' + cls + '" data-id="' + o.id + '">' +
       '<img class="thumb" src="' + o.photo + '" alt="">' +
       '<div class="info"><div class="st-line"><span class="st-emoji">' + s.emoji + '</span>' + s.userLabel + '</div>' +
-      '<div class="date">' + fmtDate(o.createdAt) + ' 주문</div>' + priceTag + '</div><div class="go">›</div></div>';
+      '<div class="date">' + fmtDate(o.createdAt) + ' 주문</div>' + priceTag + cancelTag + '</div><div class="go">›</div></div>';
   }
 
   function render() {
     var all = Store.orders();
-    var ongoing = all.filter(function (o) { return o.status !== 'done'; });
-    var past = all.filter(function (o) { return o.status === 'done'; });
+    var ongoing = all.filter(function (o) { return o.status !== 'done' && o.status !== 'canceled'; });
+    var past = all.filter(function (o) { return o.status === 'done' || o.status === 'canceled'; });
     if (all.length === 0) $('ongoing').innerHTML = '<div class="empty">아직 주문이 없어요<br>위 <b>큰 주황 버튼</b>을 눌러<br>사진을 올려보세요</div>';
     else if (ongoing.length === 0) $('ongoing').innerHTML = '<div class="empty">진행 중인 주문이 없어요</div>';
     else $('ongoing').innerHTML = ongoing.map(cardHtml).join('');
@@ -214,10 +246,10 @@
   function openDetail(id) {
     var o = Store.get(id); if (!o) return;
     var s = Store.stage(o.status);
-    var stepHtml = '<div class="stepper">' + Store.STEPPER.map(function (n) {
+    var stepHtml = (o.status === 'canceled') ? '' : ('<div class="stepper">' + Store.STEPPER.map(function (n) {
       var done = s.step >= n.th ? ' done' : '';
       return '<div class="stp' + done + '"><div class="dot">' + n.emoji + '</div><div class="lbl">' + n.label + '</div></div>';
-    }).join('') + '</div>';
+    }).join('') + '</div>');
 
     var itemLine = o.itemName ? ('<div class="now-msg" style="margin-top:10px">주문한 것: <b>' + o.itemName + '</b></div>') : '';
 
@@ -245,11 +277,32 @@
       }
     }
 
+    // 취소: 구매 전이면 취소요청 버튼 / 이미 요청됐으면 안내 / 진행된 주문은 없음
+    var cancelHtml = '';
+    if (o.status !== 'canceled') {
+      if (o.cancelRequested) {
+        cancelHtml = '<div class="cancel-box"><div class="cb-t">🚫 취소 요청됐어요</div>' +
+          '<div class="cb-m">전화로 확인하고\n취소해드릴게요.</div></div>';
+      } else if (Store.cancelable(o.status)) {
+        cancelHtml = '<button class="cancel-req-btn" id="cancelReqBtn">주문을 취소하고 싶어요</button>' +
+          '<div class="cb-note">취소는 전화로 확인한 뒤 처리해드려요</div>';
+      }
+    }
+
     $('detailBody').innerHTML =
       '<img class="detail-photo" src="' + o.photo + '" alt="주문한 사진">' + stepHtml +
       '<div class="now-card"><div class="big-emoji">' + s.emoji + '</div><div class="now-title">' + s.userLabel + '</div>' +
-      '<div class="now-msg">' + s.userMsg + '</div>' + itemLine + '</div>' + quoteHtml + payHtml;
+      '<div class="now-msg">' + s.userMsg + '</div>' + itemLine + '</div>' + quoteHtml + payHtml + cancelHtml;
     $('detail').classList.add('on'); window.scrollTo(0, 0); $('detail').scrollTop = 0; currentDetailId = id;
+
+    var crb = $('cancelReqBtn');
+    if (crb) crb.addEventListener('click', function () {
+      if (confirm('주문을 취소하고 싶으세요?\n전화로 확인한 뒤 취소해드려요.')) {
+        Store.update(id, { cancelRequested: true });
+        toast('취소 요청이 들어갔어요. 전화로 확인해드릴게요.');
+        openDetail(id);
+      }
+    });
   }
   $('backBtn').addEventListener('click', function () { $('detail').classList.remove('on'); currentDetailId = null; render(); });
 
