@@ -32,7 +32,7 @@ export default {
         const list = await env.ORDERS.list({ prefix: 'order:' });
         const order = {
           id: 'o' + now, seq: list.keys.length + 1, createdAt: now,
-          photo: body.photo || '', memo: body.memo || '',
+          photo: body.photo || '', memo: body.memo || '', customer: body.customer || null,
           status: 'requested', history: [{ status: 'requested', at: now }],
           itemName: '', price: null, fee: null, siteUrl: '', adminNote: '', trackingNo: '', paid: false
         };

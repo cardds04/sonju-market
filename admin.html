@@ -129,8 +129,9 @@
       var creq = (o.cancelRequested && o.status!=='canceled');
       var rowCls = o.status==='requested' ? ' new' : ''; if (creq) rowCls = ' cancelreq';
       var creqPill = creq ? '<span class="stpill" style="background:#dc2626;color:#fff;margin-left:6px">🚫 취소요청</span>' : '';
+      var custName = (o.customer && o.customer.name) || '고객';
       return '<div class="row'+rowCls+'" data-id="'+o.id+'"><img class="thumb" src="'+o.photo+'" alt="">' +
-        '<div class="info"><div class="top"><span class="seq">#'+o.seq+'</span><span class="cust">'+Store.profile().name+'</span></div>' +
+        '<div class="info"><div class="top"><span class="seq">#'+o.seq+'</span><span class="cust">'+custName+'</span></div>' +
         '<div class="st"><span class="stpill" style="background:'+pc[0]+';color:'+pc[1]+'">'+s.emoji+' '+s.adminLabel+'</span>'+creqPill+'</div>' +
         '<div class="time">'+timeAgo(o.createdAt)+' · '+(o.itemName||'물건 미입력')+'</div></div></div>';
     }).join('');
@@ -141,7 +142,8 @@
   for (var i=0;i<tabs.length;i++) tabs[i].addEventListener('click', function(){ for (var j=0;j<tabs.length;j++) tabs[j].classList.remove('on'); this.classList.add('on'); curFilter=this.getAttribute('data-f'); render(); });
 
   function openDetail(id) {
-    var o = Store.get(id); if (!o) return; var p = Store.profile();
+    var o = Store.get(id); if (!o) return; var p = o.customer || Store.profile();
+    if (!p.name && !p.address) p = { name: '고객', phone: '-', address: '(주소 없음 — 고객이 아직 등록 안 함)' };
     var stageBtns = STAGES.map(function (st) {
       var cur = o.status===st.key ? ' cur' : ''; var passed = (!cur && Store.stage(o.status).step > st.step) ? ' passed' : '';
       return '<button class="stage-btn'+cur+passed+'" data-st="'+st.key+'">'+st.emoji+'<br>'+st.adminLabel+'</button>';

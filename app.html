@@ -105,6 +105,21 @@
   .cancel-box .cb-t { font-size: clamp(24px, 6.5vw, 28px); font-weight: 800; color: #dc2626; }
   .cancel-box .cb-m { font-size: 21px; color: #57534e; margin-top: 8px; line-height: 1.5; white-space: pre-line; }
 
+  /* 최초 등록 화면 */
+  .reg { position: fixed; inset: 0; background: #FFF7ED; z-index: 30; overflow-y: auto; display: none; }
+  .reg.on { display: block; }
+  .reg .wrap { padding-top: calc(22px + env(safe-area-inset-top)); text-align: center; }
+  .reg-logo { width: 84px; height: 84px; border-radius: 22px; margin: 6px auto 0; }
+  .reg-title { font-size: clamp(25px, 7.2vw, 31px); font-weight: 800; margin: 14px 0 8px; line-height: 1.35; }
+  .reg-sub { font-size: clamp(19px, 5vw, 22px); color: #57534e; line-height: 1.5; margin: 0 0 12px; }
+  .reg-label { display: block; text-align: left; font-size: 21px; font-weight: 800; color: #c2410c; margin: 20px 4px 8px; }
+  .reg-input { width: 100%; font-size: 24px; padding: 18px; border: 3px solid #FDBA74; border-radius: 18px; background: #fff; }
+  .reg-input:focus { outline: none; border-color: #EA580C; }
+  .reg-btn { width: 100%; min-height: 100px; margin-top: 28px; border: none; border-radius: 24px; background: #EA580C; color: #fff; font-size: clamp(28px, 8vw, 34px); font-weight: 800; cursor: pointer; }
+  .reg-btn:active { background: #c2410c; }
+  .reg-cancel { width: 100%; background: none; border: none; color: #78716c; font-size: 21px; padding: 16px; margin-top: 6px; cursor: pointer; }
+  .edit-info { width: 100%; background: none; border: none; color: #78716c; font-size: 19px; padding: 16px; margin-top: 6px; text-decoration: underline; cursor: pointer; }
+
   .sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); align-items: flex-end; z-index: 40; }
   .sheet.on { display: flex; }
   .sheet-inner { background: #fff; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 30px 30px 0 0; padding: 28px 22px calc(26px + env(safe-area-inset-bottom)); text-align: center; }
@@ -149,6 +164,26 @@
   <div id="past" style="display:none"></div>
 
   <a class="call-btn" href="tel:16000000">📞 전화로 도와드려요</a>
+  <button class="edit-info" id="editInfoBtn">⚙️ 내 정보 고치기 (주소·연락처)</button>
+</div>
+
+<!-- 최초 등록 -->
+<div class="reg" id="reg">
+  <div class="wrap">
+    <img class="reg-logo" src="icons/icon-192.png" alt="">
+    <div class="reg-title" id="regTitle">손주마켓에 오신 걸<br>환영해요 🎉</div>
+    <div class="reg-sub" id="regSub">딱 한 번만 적어주세요.<br>다음부터는 사진만 올리면<br>이 주소로 보내드려요.</div>
+    <label class="reg-label">성함 (이름)</label>
+    <input class="reg-input" id="r-name" placeholder="예: 김순자">
+    <label class="reg-label">전화번호</label>
+    <input class="reg-input" id="r-phone" type="tel" inputmode="tel" placeholder="예: 010-1234-5678">
+    <label class="reg-label">집 주소</label>
+    <input class="reg-input" id="r-addr1" placeholder="예: 경상북도 ○○군 ○○면 ○○길 12">
+    <label class="reg-label">상세 주소 (동/호수)</label>
+    <input class="reg-input" id="r-addr2" placeholder="예: 101동 202호 (없으면 비워두세요)">
+    <button class="reg-btn" id="regBtn">저장하고 시작하기</button>
+    <button class="reg-cancel" id="regCancel" style="display:none">그만두기</button>
+  </div>
 </div>
 
 <div class="detail" id="detail">
@@ -271,7 +306,7 @@
           '<div class="pay-row"><span>물건값</span><span>' + money(o.price) + '</span></div>' +
           '<div class="pay-row"><span>수수료</span><span>' + money(o.fee || 0) + '</span></div>' +
           '<div class="pay-row total"><span>모두</span><span>' + money(total(o)) + '</span></div>' +
-          '<div class="pay-acct">' + p.account + '</div></div>';
+          '<div class="pay-acct">' + Store.shopAccount() + '</div></div>';
       } else {
         payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3><div class="pay-row"><span>금액은 곧 전화로 알려드려요</span></div><div class="pay-acct">' + p.account + '</div></div>';
       }
@@ -309,8 +344,37 @@
   var toastTimer = null;
   function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2200); }
 
+  // ── 최초 등록 (처음 한 번 이름·연락처·주소) ──
+  function showRegister(edit) {
+    var p = Store.profile();
+    $('r-name').value = edit ? (p.name || '') : '';
+    $('r-phone').value = edit ? (p.phone || '') : '';
+    $('r-addr1').value = edit ? (p.addr1 || '') : '';
+    $('r-addr2').value = edit ? (p.addr2 || '') : '';
+    $('regTitle').innerHTML = edit ? '내 정보 고치기' : '손주마켓에 오신 걸<br>환영해요 🎉';
+    $('regSub').innerHTML = edit ? '주소나 연락처가 바뀌면<br>여기서 고치세요.' : '딱 한 번만 적어주세요.<br>다음부터는 사진만 올리면<br>이 주소로 보내드려요.';
+    $('regCancel').style.display = edit ? 'block' : 'none';
+    $('reg').classList.add('on'); window.scrollTo(0, 0); $('reg').scrollTop = 0;
+  }
+  $('regBtn').addEventListener('click', function () {
+    var name = $('r-name').value.trim(), phone = $('r-phone').value.trim(), a1 = $('r-addr1').value.trim(), a2 = $('r-addr2').value.trim();
+    if (!name) { toast('성함을 적어주세요'); return; }
+    if (!phone) { toast('전화번호를 적어주세요'); return; }
+    if (!a1) { toast('집 주소를 적어주세요'); return; }
+    Store.saveProfile({ name: name, phone: phone, address: (a1 + ' ' + a2).trim(), addr1: a1, addr2: a2 });
+    $('reg').classList.remove('on');
+    toast('저장했어요! 이제 사진만 올리면 돼요 👍');
+    render();
+  });
+  $('regCancel').addEventListener('click', function () { $('reg').classList.remove('on'); });
+  $('editInfoBtn').addEventListener('click', function () { showRegister(true); });
+
   Store.onChange(function () { render(); if (currentDetailId && $('detail').classList.contains('on')) openDetail(currentDetailId); });
   Store.init();
+  // 처음이면 등록 화면 (다음 틱에 확실히 실행)
+  function gateRegister() { if (!Store.isRegistered()) showRegister(false); }
+  gateRegister();
+  window.addEventListener('load', gateRegister);
 </script>
 </body>
 </html>
