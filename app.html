@@ -9,100 +9,76 @@
 <link rel="icon" href="icons/icon-192.png">
 <style>
   /* keep-all: 한글 단어가 중간에 안 잘리고 통째로 줄바꿈됨 (안녕하세/요 방지) */
-  * { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word;
-      -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-    background: #FFF7ED; color: #1c1917;
-    min-height: 100vh;
-  }
+  body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: #FFF7ED; color: #1c1917; min-height: 100vh; }
   .wrap { max-width: 520px; margin: 0 auto; padding: 0 18px calc(28px + env(safe-area-inset-bottom)); }
 
-  header {
-    display: flex; align-items: center; gap: 12px;
-    padding: calc(16px + env(safe-area-inset-top)) 4px 14px; position: sticky; top: 0;
-    background: #FFF7ED; z-index: 5;
-  }
+  header { display: flex; align-items: center; gap: 12px; padding: calc(16px + env(safe-area-inset-top)) 4px 14px;
+    position: sticky; top: 0; background: #FFF7ED; z-index: 5; }
   header img { width: 50px; height: 50px; border-radius: 14px; }
   header .name { font-size: clamp(24px, 7vw, 30px); font-weight: 800; }
 
-  /* 큰 주문 버튼 */
-  .order-btn {
-    width: 100%; min-height: 180px;
-    border: none; border-radius: 28px;
-    background: #EA580C; color: #fff;
+  .order-btn { width: 100%; min-height: 180px; border: none; border-radius: 28px; background: #EA580C; color: #fff;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-    box-shadow: 0 12px 30px rgba(234,88,12,.32);
-    cursor: pointer; margin-top: 6px; padding: 22px;
-  }
+    box-shadow: 0 12px 30px rgba(234,88,12,.32); cursor: pointer; margin-top: 6px; padding: 22px; }
   .order-btn:active { transform: scale(.98); background: #c2410c; }
   .order-btn .cam { font-size: 64px; line-height: 1; }
   .order-btn .t1 { font-size: clamp(30px, 8.5vw, 38px); font-weight: 800; text-align: center; }
   .order-btn .t2 { font-size: clamp(18px, 5vw, 22px); font-weight: 500; opacity: .95; text-align: center; }
   input[type=file] { display: none; }
 
-  .section-title { font-size: 24px; font-weight: 800; color: #57534e; margin: 28px 4px 12px; }
+  /* 당일처리 배너 */
+  .promise { margin-top: 14px; background: #FEF3C7; border: 2px solid #FCD34D; border-radius: 18px;
+    padding: 16px 18px; font-size: clamp(19px, 5.2vw, 22px); font-weight: 700; color: #92400e; text-align: center; line-height: 1.45; }
 
-  /* 주문 카드 — 사진으로 구분 */
-  .card {
-    background: #fff; border-radius: 22px; padding: 14px;
-    display: flex; align-items: center; gap: 16px; margin-bottom: 14px;
-    box-shadow: 0 4px 14px rgba(0,0,0,.06); cursor: pointer;
-    border: 3px solid transparent;
-  }
+  .section-title { font-size: 24px; font-weight: 800; color: #57534e; margin: 26px 4px 12px; }
+
+  .card { background: #fff; border-radius: 22px; padding: 14px; display: flex; align-items: center; gap: 16px;
+    margin-bottom: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.06); cursor: pointer; border: 3px solid transparent; }
   .card:active { transform: scale(.99); }
   .card.hot { border-color: #FDBA74; }
-  .card .thumb {
-    width: 92px; height: 92px; border-radius: 16px; object-fit: cover; flex: 0 0 92px;
-    background: #f5f5f4;
-  }
+  .card.money { border-color: #86efac; }
+  .card .thumb { width: 92px; height: 92px; border-radius: 16px; object-fit: cover; flex: 0 0 92px; background: #f5f5f4; }
   .card .info { flex: 1; min-width: 0; }
-  .card .st-line { font-size: clamp(24px, 6.5vw, 28px); font-weight: 800; display: flex; align-items: center; gap: 8px; }
-  .card .st-emoji { font-size: 30px; }
-  .card .date { font-size: 19px; color: #78716c; margin-top: 6px; }
+  .card .st-line { font-size: clamp(23px, 6.3vw, 27px); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .card .st-emoji { font-size: 29px; }
+  .card .date { font-size: 18px; color: #78716c; margin-top: 6px; }
+  .card .price-tag { font-size: 20px; color: #16a34a; font-weight: 800; margin-top: 4px; }
   .card .go { font-size: 30px; color: #d6d3d1; flex: 0 0 auto; }
 
-  .empty { background: #fff; border-radius: 22px; padding: 34px 20px; text-align: center;
-    font-size: 23px; color: #78716c; line-height: 1.6; box-shadow: 0 4px 14px rgba(0,0,0,.05); }
+  .empty { background: #fff; border-radius: 22px; padding: 34px 20px; text-align: center; font-size: 23px; color: #78716c; line-height: 1.6; box-shadow: 0 4px 14px rgba(0,0,0,.05); }
+  .past-toggle { width: 100%; background: none; border: none; color: #78716c; font-size: 21px; padding: 14px; cursor: pointer; text-decoration: underline; }
 
-  .past-toggle { width: 100%; background: none; border: none; color: #78716c; font-size: 21px;
-    padding: 14px; cursor: pointer; text-decoration: underline; }
-
-  .call-btn {
-    width: 100%; min-height: 88px; margin-top: 22px;
-    border: 3px solid #16a34a; border-radius: 22px; background: #fff; color: #16a34a;
-    font-size: clamp(26px, 7vw, 30px); font-weight: 800;
-    display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none;
-  }
+  .call-btn { width: 100%; min-height: 88px; margin-top: 22px; border: 3px solid #16a34a; border-radius: 22px; background: #fff; color: #16a34a;
+    font-size: clamp(26px, 7vw, 30px); font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; }
   .call-btn:active { background: #f0fdf4; }
 
-  /* ── 상세 화면 (전체 덮기) ── */
-  .detail { position: fixed; inset: 0; background: #FFF7ED; z-index: 20; overflow-y: auto;
-    display: none; }
+  .detail { position: fixed; inset: 0; background: #FFF7ED; z-index: 20; overflow-y: auto; display: none; }
   .detail.on { display: block; }
-  .detail .wrap { padding-top: 0; }
   .back-bar { position: sticky; top: 0; background: #FFF7ED; padding: calc(14px + env(safe-area-inset-top)) 4px 10px; z-index: 3; }
-  .back-btn { border: none; background: #fff; border-radius: 16px; font-size: 24px; font-weight: 800;
-    padding: 14px 22px; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.08); display: inline-flex; align-items: center; gap: 8px; }
-
+  .back-btn { border: none; background: #fff; border-radius: 16px; font-size: 24px; font-weight: 800; padding: 14px 22px; cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08); display: inline-flex; align-items: center; gap: 8px; }
   .detail-photo { width: 100%; border-radius: 22px; margin: 6px 0 8px; background: #fff; display: block; }
 
-  /* 상태 진행 바 */
-  .stepper { display: flex; justify-content: space-between; position: relative; margin: 24px 4px 10px; }
-  .stepper::before { content: ''; position: absolute; top: 30px; left: 11%; right: 11%; height: 5px; background: #FFEDD5; z-index: 0; }
-  .stp { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 1; width: 25%; }
-  .stp .dot { width: 60px; height: 60px; border-radius: 50%; background: #FFEDD5; color: #c2410c;
-    display: flex; align-items: center; justify-content: center; font-size: 30px; }
+  .stepper { display: flex; justify-content: space-between; position: relative; margin: 24px 2px 10px; }
+  .stepper::before { content: ''; position: absolute; top: 28px; left: 9%; right: 9%; height: 5px; background: #FFEDD5; z-index: 0; }
+  .stp { display: flex; flex-direction: column; align-items: center; gap: 7px; z-index: 1; width: 20%; }
+  .stp .dot { width: 54px; height: 54px; border-radius: 50%; background: #FFEDD5; color: #c2410c; display: flex; align-items: center; justify-content: center; font-size: 26px; }
   .stp.done .dot { background: #EA580C; color: #fff; }
-  .stp .lbl { font-size: 18px; color: #78716c; text-align: center; }
+  .stp .lbl { font-size: 17px; color: #78716c; text-align: center; }
   .stp.done .lbl { color: #1c1917; font-weight: 700; }
 
-  .now-card { background: #fff; border-radius: 22px; padding: 24px; margin-top: 16px;
-    box-shadow: 0 4px 14px rgba(0,0,0,.06); text-align: center; }
+  .now-card { background: #fff; border-radius: 22px; padding: 24px; margin-top: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.06); text-align: center; }
   .now-card .big-emoji { font-size: 56px; }
   .now-card .now-title { font-size: clamp(28px, 8vw, 34px); font-weight: 800; margin: 8px 0 6px; }
   .now-card .now-msg { font-size: clamp(21px, 6vw, 25px); color: #57534e; line-height: 1.55; white-space: pre-line; }
+
+  /* 금액 안내 (quoted) - 후불이라 아직 낼 필요 없음 안내 */
+  .quote-card { background: #F0FDF4; border: 3px solid #16a34a; border-radius: 22px; padding: 22px; margin-top: 16px; text-align: center; }
+  .quote-card .q-label { font-size: 22px; color: #15803d; font-weight: 700; }
+  .quote-card .q-amount { font-size: clamp(40px, 12vw, 52px); font-weight: 800; color: #15803d; margin: 6px 0; }
+  .quote-card .q-note { font-size: 21px; color: #57534e; line-height: 1.5; }
 
   .pay-card { background: #FFF7ED; border: 3px solid #EA580C; border-radius: 22px; padding: 22px; margin-top: 16px; }
   .pay-card h3 { font-size: 25px; margin: 0 0 12px; color: #c2410c; }
@@ -110,34 +86,23 @@
   .pay-row.total { font-size: 28px; font-weight: 800; border-top: 2px dashed #FDBA74; margin-top: 8px; padding-top: 12px; }
   .pay-acct { background: #fff; border-radius: 16px; padding: 16px; margin-top: 14px; font-size: 24px; font-weight: 700; text-align: center; }
 
-  /* 사진 확인 시트 */
   .sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); align-items: flex-end; z-index: 40; }
   .sheet.on { display: flex; }
-  .sheet-inner { background: #fff; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 30px 30px 0 0;
-    padding: 28px 22px calc(26px + env(safe-area-inset-bottom)); text-align: center; }
-  .sheet-inner img { max-width: 70%; max-height: 230px; border-radius: 16px; margin: 6px auto 16px; display: block; }
+  .sheet-inner { background: #fff; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 30px 30px 0 0; padding: 28px 22px calc(26px + env(safe-area-inset-bottom)); text-align: center; }
+  .sheet-inner img { max-width: 65%; max-height: 210px; border-radius: 16px; margin: 6px auto 14px; display: block; }
   .sheet-inner .big { font-size: clamp(28px, 8vw, 32px); font-weight: 800; margin-bottom: 6px; }
-  .sheet-inner .small { font-size: 22px; color: #57534e; margin-bottom: 20px; line-height: 1.5; }
-  .confirm-btn { width: 100%; min-height: 100px; border: none; border-radius: 22px; background: #EA580C; color: #fff;
-    font-size: clamp(28px, 8vw, 32px); font-weight: 800; cursor: pointer; }
+  .sheet-inner .small { font-size: 21px; color: #57534e; margin-bottom: 18px; line-height: 1.5; white-space: pre-line; }
+  .confirm-btn { width: 100%; min-height: 100px; border: none; border-radius: 22px; background: #EA580C; color: #fff; font-size: clamp(28px, 8vw, 32px); font-weight: 800; cursor: pointer; }
   .confirm-btn:active { background: #c2410c; }
   .cancel { margin-top: 14px; background: none; border: none; color: #78716c; font-size: 22px; }
 
-  /* 토스트 */
-  .toast { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%) translateY(30px);
-    background: #1c1917; color: #fff; font-size: 24px; font-weight: 700; padding: 18px 28px; border-radius: 18px;
-    opacity: 0; transition: .3s; z-index: 60; max-width: 90%; text-align: center; }
+  .toast { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%) translateY(30px); background: #1c1917; color: #fff; font-size: 24px; font-weight: 700; padding: 18px 28px; border-radius: 18px; opacity: 0; transition: .3s; z-index: 60; max-width: 90%; text-align: center; }
   .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  .loading { text-align: center; padding: 40px; font-size: 22px; color: #78716c; }
 </style>
 </head>
 <body>
 <div class="wrap" id="home">
-  <header>
-    <img src="icons/icon-192.png" alt="">
-    <span class="name">손주마켓</span>
-  </header>
+  <header><img src="icons/icon-192.png" alt=""><span class="name">손주마켓</span></header>
 
   <button class="order-btn" id="orderBtn">
     <span class="cam">📷</span>
@@ -145,6 +110,7 @@
     <span class="t2">사진 고르기만 하면 돼요</span>
   </button>
   <input type="file" id="fileInput" accept="image/*">
+  <div class="promise" id="promise"></div>
 
   <div class="section-title">내 주문</div>
   <div id="ongoing"></div>
@@ -154,7 +120,6 @@
   <a class="call-btn" href="tel:16000000">📞 전화로 도와드려요</a>
 </div>
 
-<!-- 주문 상세 -->
 <div class="detail" id="detail">
   <div class="wrap">
     <div class="back-bar"><button class="back-btn" id="backBtn">◀ 뒤로</button></div>
@@ -163,12 +128,11 @@
   </div>
 </div>
 
-<!-- 사진 확인 시트 -->
 <div class="sheet" id="sheet">
   <div class="sheet-inner">
     <div class="big">이 사진으로 주문할까요?</div>
     <img id="preview" alt="">
-    <div class="small">손주마켓이 대신 주문해서<br>집으로 보내드려요</div>
+    <div class="small" id="sheetPromise"></div>
     <button class="confirm-btn" id="confirmBtn">네, 주문할래요</button>
     <br><button class="cancel" id="cancelBtn">다시 고를게요</button>
   </div>
@@ -179,31 +143,25 @@
 <script src="store.js"></script>
 <script>
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
-
   var $ = function (id) { return document.getElementById(id); };
   var pendingPhoto = null;
 
-  // ── 사진 첨부 → 축소 → 확인 ──
+  // 당일처리 문구
+  var proc = Store.processing();
+  $('promise').textContent = proc.badge;
+  $('sheetPromise').textContent = proc.line;
+
   $('orderBtn').addEventListener('click', function () { $('fileInput').click(); });
   $('fileInput').addEventListener('change', function () {
-    var f = this.files && this.files[0];
-    if (!f) return;
-    downscale(f, 1200, function (dataUrl) {
-      pendingPhoto = dataUrl;
-      $('preview').src = dataUrl;
-      $('sheet').classList.add('on');
-    });
+    var f = this.files && this.files[0]; if (!f) return;
+    downscale(f, 1200, function (dataUrl) { pendingPhoto = dataUrl; $('preview').src = dataUrl; $('sheet').classList.add('on'); });
   });
-  $('cancelBtn').addEventListener('click', function () {
-    $('sheet').classList.remove('on'); pendingPhoto = null; $('fileInput').value = '';
-  });
+  $('cancelBtn').addEventListener('click', function () { $('sheet').classList.remove('on'); pendingPhoto = null; $('fileInput').value = ''; });
   $('confirmBtn').addEventListener('click', function () {
     if (!pendingPhoto) return;
     Store.create({ photo: pendingPhoto });
-    pendingPhoto = null; $('fileInput').value = '';
-    $('sheet').classList.remove('on');
-    toast('주문이 들어갔어요! 👍');
-    render();
+    pendingPhoto = null; $('fileInput').value = ''; $('sheet').classList.remove('on');
+    toast('주문이 들어갔어요! 👍'); render();
   });
 
   function downscale(file, maxW, cb) {
@@ -220,123 +178,86 @@
     img.src = URL.createObjectURL(file);
   }
 
-  // ── 목록 렌더 ──
-  function fmtDate(ts) {
-    var d = new Date(ts);
-    return (d.getMonth() + 1) + '월 ' + d.getDate() + '일';
-  }
+  function fmtDate(ts) { var d = new Date(ts); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
+  function money(n) { return n == null ? null : Number(n).toLocaleString('ko-KR') + '원'; }
+  function total(o) { return (Number(o.price) || 0) + (Number(o.fee) || 0); }
+
   function cardHtml(o) {
     var s = Store.stage(o.status);
-    var hot = (o.status === 'arrived') ? ' hot' : '';
-    return '<div class="card' + hot + '" data-id="' + o.id + '">' +
+    var cls = (o.status === 'arrived') ? ' hot' : (o.status === 'quoted' ? ' money' : '');
+    var priceTag = (o.status === 'quoted' && o.price != null) ? '<div class="price-tag">💰 ' + money(total(o)) + '</div>' : '';
+    return '<div class="card' + cls + '" data-id="' + o.id + '">' +
       '<img class="thumb" src="' + o.photo + '" alt="">' +
-      '<div class="info">' +
-        '<div class="st-line"><span class="st-emoji">' + s.emoji + '</span>' + s.userLabel + '</div>' +
-        '<div class="date">' + fmtDate(o.createdAt) + ' 주문</div>' +
-      '</div><div class="go">›</div></div>';
+      '<div class="info"><div class="st-line"><span class="st-emoji">' + s.emoji + '</span>' + s.userLabel + '</div>' +
+      '<div class="date">' + fmtDate(o.createdAt) + ' 주문</div>' + priceTag + '</div><div class="go">›</div></div>';
   }
 
   function render() {
     var all = Store.orders();
     var ongoing = all.filter(function (o) { return o.status !== 'done'; });
     var past = all.filter(function (o) { return o.status === 'done'; });
+    if (all.length === 0) $('ongoing').innerHTML = '<div class="empty">아직 주문이 없어요<br>위 <b>큰 주황 버튼</b>을 눌러<br>사진을 올려보세요</div>';
+    else if (ongoing.length === 0) $('ongoing').innerHTML = '<div class="empty">진행 중인 주문이 없어요</div>';
+    else $('ongoing').innerHTML = ongoing.map(cardHtml).join('');
 
-    if (all.length === 0) {
-      $('ongoing').innerHTML = '<div class="empty">아직 주문이 없어요<br>위 <b>큰 주황 버튼</b>을 눌러<br>사진을 올려보세요</div>';
-    } else if (ongoing.length === 0) {
-      $('ongoing').innerHTML = '<div class="empty">진행 중인 주문이 없어요</div>';
-    } else {
-      $('ongoing').innerHTML = ongoing.map(cardHtml).join('');
-    }
-
-    if (past.length > 0) {
-      $('pastToggle').style.display = 'block';
-      $('pastToggle').textContent = '지난 주문 ' + past.length + '개 보기';
-      $('past').innerHTML = past.map(cardHtml).join('');
-    } else {
-      $('pastToggle').style.display = 'none';
-      $('past').innerHTML = '';
-    }
+    if (past.length > 0) { $('pastToggle').style.display = 'block';
+      $('pastToggle').textContent = pastOpen ? '지난 주문 접기' : '지난 주문 ' + past.length + '개 보기';
+      $('past').innerHTML = past.map(cardHtml).join(''); }
+    else { $('pastToggle').style.display = 'none'; $('past').innerHTML = ''; }
     bindCards();
   }
-
   var pastOpen = false;
-  $('pastToggle').addEventListener('click', function () {
-    pastOpen = !pastOpen;
-    $('past').style.display = pastOpen ? 'block' : 'none';
-    this.textContent = (pastOpen ? '지난 주문 접기' : '지난 주문 ' + $('past').children.length + '개 보기');
-  });
+  $('pastToggle').addEventListener('click', function () { pastOpen = !pastOpen; $('past').style.display = pastOpen ? 'block' : 'none'; render(); });
+  function bindCards() { var c = document.querySelectorAll('.card'); for (var i = 0; i < c.length; i++) c[i].addEventListener('click', function () { openDetail(this.getAttribute('data-id')); }); }
 
-  function bindCards() {
-    var cards = document.querySelectorAll('.card');
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].addEventListener('click', function () { openDetail(this.getAttribute('data-id')); });
-    }
-  }
-
-  // ── 상세 ──
-  function money(n) { return n == null ? null : Number(n).toLocaleString('ko-KR') + '원'; }
-
+  var currentDetailId = null;
   function openDetail(id) {
     var o = Store.get(id); if (!o) return;
     var s = Store.stage(o.status);
-    var steps = Store.STAGES.slice(0, 4); // 접수/주문/배송/도착
-    var stepHtml = '<div class="stepper">' + steps.map(function (st) {
-      var done = s.step >= st.step ? ' done' : '';
-      return '<div class="stp' + done + '"><div class="dot">' + st.emoji + '</div><div class="lbl">' + st.adminLabel + '</div></div>';
+    var stepHtml = '<div class="stepper">' + Store.STEPPER.map(function (n) {
+      var done = s.step >= n.th ? ' done' : '';
+      return '<div class="stp' + done + '"><div class="dot">' + n.emoji + '</div><div class="lbl">' + n.label + '</div></div>';
     }).join('') + '</div>';
 
+    var itemLine = o.itemName ? ('<div class="now-msg" style="margin-top:10px">주문한 것: <b>' + o.itemName + '</b></div>') : '';
+
+    // 금액 안내 (금액안내 단계이고 아직 도착 전) — 후불이라 아직 낼 필요 없음
+    var quoteHtml = '';
+    if (o.status === 'quoted' && o.price != null) {
+      quoteHtml = '<div class="quote-card"><div class="q-label">이 금액이에요</div>' +
+        '<div class="q-amount">' + money(total(o)) + '</div>' +
+        '<div class="q-note">지금 안 내셔도 돼요.\n물건 받으신 다음에 내시면 돼요. (후불)</div></div>';
+    }
+
+    // 결제 안내 (도착/완료)
     var payHtml = '';
     if (o.status === 'arrived' || o.status === 'done') {
       var p = Store.profile();
+      var head = o.status === 'done' ? '입금 고맙습니다 ✅' : '이렇게 넣어주세요';
       if (o.price != null) {
-        var total = (Number(o.price) || 0) + (Number(o.fee) || 0);
-        payHtml = '<div class="pay-card"><h3>💳 이렇게 넣어주세요</h3>' +
+        payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3>' +
           '<div class="pay-row"><span>물건값</span><span>' + money(o.price) + '</span></div>' +
           '<div class="pay-row"><span>수수료</span><span>' + money(o.fee || 0) + '</span></div>' +
-          '<div class="pay-row total"><span>모두</span><span>' + money(total) + '</span></div>' +
+          '<div class="pay-row total"><span>모두</span><span>' + money(total(o)) + '</span></div>' +
           '<div class="pay-acct">' + p.account + '</div></div>';
       } else {
-        payHtml = '<div class="pay-card"><h3>💳 결제</h3><div class="pay-row"><span>금액은 곧 전화로 알려드려요</span></div>' +
-          '<div class="pay-acct">' + Store.profile().account + '</div></div>';
+        payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3><div class="pay-row"><span>금액은 곧 전화로 알려드려요</span></div><div class="pay-acct">' + p.account + '</div></div>';
       }
-      if (o.status === 'done') payHtml = payHtml.replace('이렇게 넣어주세요', '입금 고맙습니다 ✅');
     }
 
-    var itemLine = o.itemName ? ('<div class="now-msg" style="margin-top:8px">주문한 것: <b>' + o.itemName + '</b></div>') : '';
-
     $('detailBody').innerHTML =
-      '<img class="detail-photo" src="' + o.photo + '" alt="주문한 사진">' +
-      stepHtml +
-      '<div class="now-card"><div class="big-emoji">' + s.emoji + '</div>' +
-        '<div class="now-title">' + s.userLabel + '</div>' +
-        '<div class="now-msg">' + s.userMsg + '</div>' + itemLine + '</div>' +
-      payHtml;
-    $('detail').classList.add('on');
-    window.scrollTo(0, 0);
-    $('detail').scrollTop = 0;
-    currentDetailId = id;
+      '<img class="detail-photo" src="' + o.photo + '" alt="주문한 사진">' + stepHtml +
+      '<div class="now-card"><div class="big-emoji">' + s.emoji + '</div><div class="now-title">' + s.userLabel + '</div>' +
+      '<div class="now-msg">' + s.userMsg + '</div>' + itemLine + '</div>' + quoteHtml + payHtml;
+    $('detail').classList.add('on'); window.scrollTo(0, 0); $('detail').scrollTop = 0; currentDetailId = id;
   }
-  var currentDetailId = null;
-  $('backBtn').addEventListener('click', function () {
-    $('detail').classList.remove('on'); currentDetailId = null; render();
-  });
+  $('backBtn').addEventListener('click', function () { $('detail').classList.remove('on'); currentDetailId = null; render(); });
 
-  // 토스트
   var toastTimer = null;
-  function toast(msg) {
-    var t = $('toast'); t.textContent = msg; t.classList.add('on');
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2200);
-  }
+  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2200); }
 
-  // 관리자가 상태 바꾸면(다른 탭/재방문) 자동 반영
-  Store.onChange(function () {
-    render();
-    if (currentDetailId && $('detail').classList.contains('on')) openDetail(currentDetailId);
-  });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
-
-  render();
+  Store.onChange(function () { render(); if (currentDetailId && $('detail').classList.contains('on')) openDetail(currentDetailId); });
+  Store.init();
 </script>
 </body>
 </html>

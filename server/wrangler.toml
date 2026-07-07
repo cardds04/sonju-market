@@ -1,0 +1,8 @@
+name = "sonju-market-api"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# KV 네임스페이스 — 아래 id는 `wrangler kv namespace create ORDERS` 후 채워짐
+[[kv_namespaces]]
+binding = "ORDERS"
+id = "PLACEHOLDER_KV_ID"

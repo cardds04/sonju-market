@@ -9,25 +9,21 @@
 <style>
   * { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
-  body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-    background: #f1f5f9; color: #0f172a; }
+  body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: #f1f5f9; color: #0f172a; }
   .wrap { max-width: 720px; margin: 0 auto; padding: 0 14px calc(24px + env(safe-area-inset-bottom)); }
 
-  header { position: sticky; top: 0; background: #0f172a; color: #fff; z-index: 5;
-    padding: calc(14px + env(safe-area-inset-top)) 16px 12px; display: flex; align-items: center; gap: 10px; }
+  header { position: sticky; top: 0; background: #0f172a; color: #fff; z-index: 5; padding: calc(14px + env(safe-area-inset-top)) 16px 12px; display: flex; align-items: center; gap: 10px; }
   header img { width: 34px; height: 34px; border-radius: 9px; }
   header .name { font-size: 20px; font-weight: 800; }
-  header .badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 15px; font-weight: 700;
-    padding: 5px 12px; border-radius: 999px; display: none; }
+  header .badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 15px; font-weight: 700; padding: 5px 12px; border-radius: 999px; display: none; }
 
-  .tabs { display: flex; gap: 8px; padding: 14px 2px 6px; position: sticky; top: 56px; background: #f1f5f9; z-index: 4; }
-  .tab { flex: 1; text-align: center; padding: 12px 6px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0;
-    font-size: 16px; font-weight: 700; color: #475569; cursor: pointer; }
+  .cutoff { background: #fffbeb; border: 2px solid #fcd34d; color: #92400e; border-radius: 12px; padding: 10px 14px; margin: 12px 2px 4px; font-size: 15px; font-weight: 700; text-align: center; }
+
+  .tabs { display: flex; gap: 8px; padding: 10px 2px 6px; position: sticky; top: 56px; background: #f1f5f9; z-index: 4; }
+  .tab { flex: 1; text-align: center; padding: 12px 6px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0; font-size: 16px; font-weight: 700; color: #475569; cursor: pointer; }
   .tab.on { background: #0f172a; color: #fff; border-color: #0f172a; }
-  .tab .cnt { display: inline-block; min-width: 20px; }
 
-  .row { background: #fff; border-radius: 14px; padding: 12px; display: flex; gap: 12px; align-items: center;
-    margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.05); cursor: pointer; border-left: 6px solid transparent; }
+  .row { background: #fff; border-radius: 14px; padding: 12px; display: flex; gap: 12px; align-items: center; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.05); cursor: pointer; border-left: 6px solid transparent; }
   .row.new { border-left-color: #ef4444; }
   .row .thumb { width: 68px; height: 68px; border-radius: 10px; object-fit: cover; flex: 0 0 68px; background: #f1f5f9; }
   .row .info { flex: 1; min-width: 0; }
@@ -37,15 +33,12 @@
   .row .st { font-size: 16px; font-weight: 700; margin-top: 4px; }
   .row .time { font-size: 14px; color: #94a3b8; margin-top: 2px; }
   .stpill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 14px; font-weight: 800; }
-
   .empty { text-align: center; color: #94a3b8; font-size: 18px; padding: 40px; }
 
-  /* 상세 */
   .detail { position: fixed; inset: 0; background: #f1f5f9; z-index: 20; overflow-y: auto; display: none; }
   .detail.on { display: block; }
   .back-bar { position: sticky; top: 0; background: #0f172a; padding: calc(12px + env(safe-area-inset-top)) 14px 12px; }
-  .back-btn { border: none; background: #1e293b; color: #fff; border-radius: 10px; font-size: 17px; font-weight: 700;
-    padding: 10px 16px; cursor: pointer; }
+  .back-btn { border: none; background: #1e293b; color: #fff; border-radius: 10px; font-size: 17px; font-weight: 700; padding: 10px 16px; cursor: pointer; }
   .dphoto { width: 100%; border-radius: 14px; margin: 12px 0; background: #fff; display: block; }
 
   .box { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
@@ -57,53 +50,43 @@
   input.f { width: 100%; font-size: 20px; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; }
   input.f:focus { outline: none; border-color: #0f172a; }
   .total-line { font-size: 22px; font-weight: 800; text-align: right; margin-top: 12px; color: #0f172a; }
+  .quote-btn { width: 100%; min-height: 60px; margin-top: 12px; border: none; border-radius: 12px; background: #16a34a; color: #fff; font-size: 19px; font-weight: 800; cursor: pointer; }
+  .quote-btn:active { background: #15803d; }
+  .save-btn { width: 100%; min-height: 52px; margin-top: 10px; border: 2px solid #cbd5e1; border-radius: 12px; background: #fff; color: #334155; font-size: 17px; font-weight: 700; cursor: pointer; }
 
-  .stage-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-  .stage-btn { flex: 1; min-width: 60px; padding: 12px 4px; border-radius: 10px; border: 2px solid #e2e8f0;
-    background: #fff; font-size: 15px; font-weight: 800; color: #475569; cursor: pointer; text-align: center; }
+  .stage-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 6px; }
+  .stage-btn { padding: 10px 4px; border-radius: 10px; border: 2px solid #e2e8f0; background: #fff; font-size: 13px; font-weight: 800; color: #475569; cursor: pointer; text-align: center; line-height: 1.3; }
   .stage-btn.cur { background: #EA580C; color: #fff; border-color: #EA580C; }
   .stage-btn.passed { background: #ffedd5; color: #c2410c; border-color: #fed7aa; }
-
-  .next-btn { width: 100%; min-height: 64px; margin-top: 14px; border: none; border-radius: 12px;
-    background: #16a34a; color: #fff; font-size: 22px; font-weight: 800; cursor: pointer; }
-  .next-btn:active { background: #15803d; }
+  .next-btn { width: 100%; min-height: 62px; margin-top: 12px; border: none; border-radius: 12px; background: #0f172a; color: #fff; font-size: 21px; font-weight: 800; cursor: pointer; }
+  .next-btn:active { background: #1e293b; }
   .next-btn:disabled { background: #cbd5e1; }
-
-  .save-btn { width: 100%; min-height: 56px; margin-top: 10px; border: none; border-radius: 12px;
-    background: #0f172a; color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; }
   .danger { width: 100%; margin-top: 10px; background: none; border: none; color: #ef4444; font-size: 15px; cursor: pointer; }
 
-  .toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px);
-    background: #0f172a; color: #fff; font-size: 17px; font-weight: 700; padding: 14px 22px; border-radius: 12px;
-    opacity: 0; transition: .25s; z-index: 60; }
+  .toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px); background: #0f172a; color: #fff; font-size: 17px; font-weight: 700; padding: 14px 22px; border-radius: 12px; opacity: 0; transition: .25s; z-index: 60; }
   .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .demo-note { font-size: 13px; color: #94a3b8; text-align: center; padding: 14px; }
+  .note { font-size: 13px; color: #94a3b8; text-align: center; padding: 14px; }
 </style>
 </head>
 <body>
-<header>
-  <img src="icons/icon-192.png" alt="">
-  <span class="name">손주마켓 관리자</span>
-  <span class="badge" id="newBadge"></span>
-</header>
+<header><img src="icons/icon-192.png" alt=""><span class="name">손주마켓 관리자</span><span class="badge" id="newBadge"></span></header>
 
 <div class="wrap">
+  <div class="cutoff" id="cutoff"></div>
   <div class="tabs">
-    <div class="tab on" data-f="new">신규 <span class="cnt" id="c-new">0</span></div>
-    <div class="tab" data-f="doing">진행중 <span class="cnt" id="c-doing">0</span></div>
-    <div class="tab" data-f="done">완료 <span class="cnt" id="c-done">0</span></div>
-    <div class="tab" data-f="all">전체 <span class="cnt" id="c-all">0</span></div>
+    <div class="tab on" data-f="new">신규 <span id="c-new">0</span></div>
+    <div class="tab" data-f="doing">진행중 <span id="c-doing">0</span></div>
+    <div class="tab" data-f="done">완료 <span id="c-done">0</span></div>
+    <div class="tab" data-f="all">전체 <span id="c-all">0</span></div>
   </div>
   <div id="list"></div>
-  <div class="demo-note">데모: 데이터는 이 브라우저에 저장돼요. 실제 배포 시 서버 연동 필요.</div>
+  <div class="note" id="srvNote"></div>
 </div>
 
-<!-- 상세 -->
 <div class="detail" id="detail">
   <div class="back-bar"><button class="back-btn" id="backBtn">◀ 목록</button></div>
   <div class="wrap" id="detailBody"></div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script src="store.js"></script>
@@ -111,132 +94,90 @@
   var $ = function (id) { return document.getElementById(id); };
   var STAGES = Store.STAGES;
   var curFilter = 'new';
-  var curId = null;
 
-  function timeAgo(ts) {
-    var s = Math.floor((Date.now() - ts) / 1000);
-    if (s < 60) return '방금';
-    if (s < 3600) return Math.floor(s / 60) + '분 전';
-    if (s < 86400) return Math.floor(s / 3600) + '시간 전';
-    return Math.floor(s / 86400) + '일 전';
-  }
+  var proc = Store.processing();
+  $('cutoff').textContent = proc.today ? '⚡ 지금은 오후 3시 전 — 오늘 들어온 주문은 오늘 처리!' : '오후 3시 이후 — 지금 주문은 내일 처리 대상';
+  $('srvNote').textContent = Store.API_BASE ? '서버 연결됨 (여러 기기 공유)' : '데모: 이 브라우저에만 저장됨';
+
+  function timeAgo(ts) { var s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 60) return '방금'; if (s < 3600) return Math.floor(s/60)+'분 전'; if (s < 86400) return Math.floor(s/3600)+'시간 전'; return Math.floor(s/86400)+'일 전'; }
   function money(n) { return n == null ? '-' : Number(n).toLocaleString('ko-KR') + '원'; }
-  function pillColor(key) {
-    return { requested:'#fee2e2;#b91c1c', ordered:'#dbeafe;#1d4ed8', shipping:'#e0e7ff;#4338ca',
-      arrived:'#fef9c3;#a16207', done:'#dcfce7;#15803d' }[key] || '#f1f5f9;#475569';
-  }
+  function pillColor(k) { return { requested:'#fee2e2;#b91c1c', checking:'#fef9c3;#a16207', quoted:'#dcfce7;#15803d',
+    ordered:'#dbeafe;#1d4ed8', shipping:'#e0e7ff;#4338ca', arrived:'#fed7aa;#c2410c', done:'#f1f5f9;#475569' }[k] || '#f1f5f9;#475569'; }
 
-  function tabMatch(o, f) {
-    if (f === 'all') return true;
-    if (f === 'new') return o.status === 'requested';
-    if (f === 'doing') return o.status === 'ordered' || o.status === 'shipping' || o.status === 'arrived';
-    if (f === 'done') return o.status === 'done';
-  }
+  function tabMatch(o, f) { if (f==='all') return true; if (f==='new') return o.status==='requested';
+    if (f==='done') return o.status==='done'; return o.status!=='requested' && o.status!=='done'; }
 
   function render() {
     var all = Store.orders();
-    var counts = { new:0, doing:0, done:0, all: all.length };
-    all.forEach(function (o) {
-      if (o.status === 'requested') counts.new++;
-      else if (o.status === 'done') counts.done++;
-      else counts.doing++;
-    });
-    $('c-new').textContent = counts.new; $('c-doing').textContent = counts.doing;
-    $('c-done').textContent = counts.done; $('c-all').textContent = counts.all;
-    var nb = $('newBadge');
-    if (counts.new > 0) { nb.style.display = 'inline-block'; nb.textContent = '새 주문 ' + counts.new; }
-    else nb.style.display = 'none';
+    var cn = { n:0, d:0, done:0 };
+    all.forEach(function (o) { if (o.status==='requested') cn.n++; else if (o.status==='done') cn.done++; else cn.d++; });
+    $('c-new').textContent = cn.n; $('c-doing').textContent = cn.d; $('c-done').textContent = cn.done; $('c-all').textContent = all.length;
+    var nb = $('newBadge'); if (cn.n > 0) { nb.style.display='inline-block'; nb.textContent='새 주문 '+cn.n; } else nb.style.display='none';
 
     var rows = all.filter(function (o) { return tabMatch(o, curFilter); });
     if (rows.length === 0) { $('list').innerHTML = '<div class="empty">주문이 없어요</div>'; return; }
     $('list').innerHTML = rows.map(function (o) {
-      var s = Store.stage(o.status);
-      var pc = pillColor(o.status).split(';');
-      var isNew = o.status === 'requested' ? ' new' : '';
-      return '<div class="row' + isNew + '" data-id="' + o.id + '">' +
-        '<img class="thumb" src="' + o.photo + '" alt="">' +
-        '<div class="info"><div class="top"><span class="seq">#' + o.seq + '</span>' +
-          '<span class="cust">' + Store.profile().name + '</span></div>' +
-        '<div class="st"><span class="stpill" style="background:' + pc[0] + ';color:' + pc[1] + '">' + s.emoji + ' ' + s.adminLabel + '</span></div>' +
-        '<div class="time">' + timeAgo(o.createdAt) + ' · ' + (o.itemName || '물건 미입력') + '</div></div></div>';
+      var s = Store.stage(o.status); var pc = pillColor(o.status).split(';'); var isNew = o.status==='requested' ? ' new' : '';
+      return '<div class="row'+isNew+'" data-id="'+o.id+'"><img class="thumb" src="'+o.photo+'" alt="">' +
+        '<div class="info"><div class="top"><span class="seq">#'+o.seq+'</span><span class="cust">'+Store.profile().name+'</span></div>' +
+        '<div class="st"><span class="stpill" style="background:'+pc[0]+';color:'+pc[1]+'">'+s.emoji+' '+s.adminLabel+'</span></div>' +
+        '<div class="time">'+timeAgo(o.createdAt)+' · '+(o.itemName||'물건 미입력')+'</div></div></div>';
     }).join('');
-    var rs = document.querySelectorAll('.row');
-    for (var i = 0; i < rs.length; i++) rs[i].addEventListener('click', function () { openDetail(this.getAttribute('data-id')); });
+    var rs = document.querySelectorAll('.row'); for (var i=0;i<rs.length;i++) rs[i].addEventListener('click', function(){ openDetail(this.getAttribute('data-id')); });
   }
 
   var tabs = document.querySelectorAll('.tab');
-  for (var i = 0; i < tabs.length; i++) tabs[i].addEventListener('click', function () {
-    for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove('on');
-    this.classList.add('on'); curFilter = this.getAttribute('data-f'); render();
-  });
+  for (var i=0;i<tabs.length;i++) tabs[i].addEventListener('click', function(){ for (var j=0;j<tabs.length;j++) tabs[j].classList.remove('on'); this.classList.add('on'); curFilter=this.getAttribute('data-f'); render(); });
 
   function openDetail(id) {
-    var o = Store.get(id); if (!o) return; curId = id;
-    var p = Store.profile();
+    var o = Store.get(id); if (!o) return; var p = Store.profile();
     var stageBtns = STAGES.map(function (st) {
-      var cur = o.status === st.key ? ' cur' : '';
-      var passed = (!cur && Store.stage(o.status).step > st.step) ? ' passed' : '';
-      return '<button class="stage-btn' + cur + passed + '" data-st="' + st.key + '">' + st.emoji + '<br>' + st.adminLabel + '</button>';
+      var cur = o.status===st.key ? ' cur' : ''; var passed = (!cur && Store.stage(o.status).step > st.step) ? ' passed' : '';
+      return '<button class="stage-btn'+cur+passed+'" data-st="'+st.key+'">'+st.emoji+'<br>'+st.adminLabel+'</button>';
     }).join('');
-    var curStep = Store.stage(o.status).step;
-    var nextStage = STAGES[curStep + 1];
+    var curStep = Store.stage(o.status).step; var nextStage = STAGES[curStep + 1];
 
     $('detailBody').innerHTML =
-      '<img class="dphoto" src="' + o.photo + '" alt="주문 사진">' +
-      '<div class="box"><h3>주문자</h3>' +
-        '<div class="cust-line"><b>이름</b>' + p.name + '</div>' +
-        '<div class="cust-line"><b>연락처</b>' + p.phone + '</div>' +
-        '<div class="cust-line"><b>주소</b>' + p.address + '</div></div>' +
-      '<div class="box"><h3>물건 정보</h3>' +
-        '<label>물건 이름</label><input class="f" id="f-item" value="' + (o.itemName || '') + '" placeholder="예: 꽃무늬 봄 남방">' +
-        '<label>물건값 (원)</label><input class="f" id="f-price" type="number" inputmode="numeric" value="' + (o.price != null ? o.price : '') + '" placeholder="예: 39000">' +
-        '<label>수수료 (원)</label><input class="f" id="f-fee" type="number" inputmode="numeric" value="' + (o.fee != null ? o.fee : '') + '" placeholder="예: 5000">' +
+      '<img class="dphoto" src="'+o.photo+'" alt="주문 사진">' +
+      '<div class="box"><h3>주문자</h3><div class="cust-line"><b>이름</b>'+p.name+'</div><div class="cust-line"><b>연락처</b>'+p.phone+'</div><div class="cust-line"><b>주소</b>'+p.address+'</div></div>' +
+      '<div class="box"><h3>확인 & 금액 (고객에게 안내됨)</h3>' +
+        '<label>물건 이름</label><input class="f" id="f-item" value="'+(o.itemName||'')+'" placeholder="예: 꽃무늬 봄 남방">' +
+        '<label>브랜드 / 사는 곳 (사이트 주소)</label><input class="f" id="f-site" value="'+(o.siteUrl||'')+'" placeholder="예: 무신사 / 링크">' +
+        '<label>물건값 (최저가, 원)</label><input class="f" id="f-price" type="number" inputmode="numeric" value="'+(o.price!=null?o.price:'')+'" placeholder="예: 39000">' +
+        '<label>수수료 (원)</label><input class="f" id="f-fee" type="number" inputmode="numeric" value="'+(o.fee!=null?o.fee:'')+'" placeholder="예: 5000">' +
         '<div class="total-line" id="totalLine"></div>' +
-        '<label>메모</label><input class="f" id="f-note" value="' + (o.adminNote || '') + '" placeholder="특이사항">' +
-        '<button class="save-btn" id="saveBtn">💾 정보 저장</button></div>' +
-      '<div class="box"><h3>주문 단계 (누르면 바뀜)</h3><div class="stage-row">' + stageBtns + '</div>' +
-        (nextStage ? '<button class="next-btn" id="nextBtn">▶ 다음 단계로: ' + nextStage.emoji + ' ' + nextStage.adminLabel + '</button>' : '<button class="next-btn" disabled>완료된 주문</button>') +
-        '</div>' +
-      '<button class="danger" id="delBtn">이 주문 삭제</button>';
+        '<button class="quote-btn" id="quoteBtn">💰 금액 확정 → 고객에게 안내</button>' +
+        '<label>메모</label><input class="f" id="f-note" value="'+(o.adminNote||'')+'" placeholder="특이사항">' +
+        '<button class="save-btn" id="saveBtn">저장만 하기</button></div>' +
+      '<div class="box"><h3>주문 단계 (누르면 그 단계로)</h3><div class="stage-row">'+stageBtns+'</div>' +
+        (nextStage ? '<button class="next-btn" id="nextBtn">▶ 다음: '+nextStage.emoji+' '+nextStage.adminLabel+'</button>' : '<button class="next-btn" disabled>완료된 주문</button>') +
+        '</div><button class="danger" id="delBtn">이 주문 삭제</button>';
 
-    $('detail').classList.add('on'); window.scrollTo(0, 0); $('detail').scrollTop = 0;
-    updateTotal();
+    $('detail').classList.add('on'); window.scrollTo(0,0); $('detail').scrollTop = 0; updateTotal();
 
-    ['f-price', 'f-fee'].forEach(function (fid) { $(fid).addEventListener('input', updateTotal); });
-    $('saveBtn').addEventListener('click', function () {
-      Store.update(id, {
-        itemName: $('f-item').value.trim(),
-        price: $('f-price').value === '' ? null : Number($('f-price').value),
-        fee: $('f-fee').value === '' ? null : Number($('f-fee').value),
-        adminNote: $('f-note').value.trim()
-      });
-      toast('저장했어요');
+    ['f-price','f-fee'].forEach(function(fid){ $(fid).addEventListener('input', updateTotal); });
+    function collect() { return { itemName:$('f-item').value.trim(), siteUrl:$('f-site').value.trim(),
+      price:$('f-price').value===''?null:Number($('f-price').value), fee:$('f-fee').value===''?null:Number($('f-fee').value), adminNote:$('f-note').value.trim() }; }
+    $('saveBtn').addEventListener('click', function(){ Store.update(id, collect()); toast('저장했어요'); });
+    $('quoteBtn').addEventListener('click', function(){
+      var c = collect();
+      if (c.price == null) { toast('물건값을 먼저 넣어주세요'); return; }
+      Store.update(id, c); Store.setStatus(id, 'quoted'); toast('💰 고객에게 금액을 안내했어요'); openDetail(id);
     });
     var sbs = document.querySelectorAll('.stage-btn');
-    for (var k = 0; k < sbs.length; k++) sbs[k].addEventListener('click', function () {
-      Store.setStatus(id, this.getAttribute('data-st')); toast('단계를 바꿨어요'); openDetail(id);
-    });
-    if (nextStage) $('nextBtn').addEventListener('click', function () {
-      Store.setStatus(id, nextStage.key); toast('▶ ' + nextStage.adminLabel + '(으)로'); openDetail(id);
-    });
-    $('delBtn').addEventListener('click', function () {
-      if (confirm('이 주문을 삭제할까요?')) { Store.remove(id); $('detail').classList.remove('on'); render(); }
-    });
+    for (var k=0;k<sbs.length;k++) sbs[k].addEventListener('click', function(){ Store.setStatus(id, this.getAttribute('data-st')); toast('단계를 바꿨어요'); openDetail(id); });
+    if (nextStage) $('nextBtn').addEventListener('click', function(){ Store.setStatus(id, nextStage.key); toast('▶ '+nextStage.adminLabel); openDetail(id); });
+    $('delBtn').addEventListener('click', function(){ if (confirm('이 주문을 삭제할까요?')) { Store.remove(id); $('detail').classList.remove('on'); render(); } });
   }
-  function updateTotal() {
-    var pr = Number($('f-price') && $('f-price').value) || 0;
-    var fe = Number($('f-fee') && $('f-fee').value) || 0;
-    if ($('totalLine')) $('totalLine').textContent = '합계: ' + money(pr + fe);
-  }
-  $('backBtn').addEventListener('click', function () { $('detail').classList.remove('on'); curId = null; render(); });
+  function updateTotal() { var pr = Number($('f-price') && $('f-price').value)||0; var fe = Number($('f-fee') && $('f-fee').value)||0; if ($('totalLine')) $('totalLine').textContent = '합계: '+money(pr+fe); }
+  $('backBtn').addEventListener('click', function(){ $('detail').classList.remove('on'); render(); });
 
   var toastTimer = null;
-  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on');
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 1800); }
+  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove('on'); }, 1800); }
 
-  Store.onChange(function () { render(); });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
-  render();
+  Store.onChange(function(){ render(); });
+  Store.init();
 </script>
 </body>
 </html>
