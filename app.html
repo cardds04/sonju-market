@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EA580C">
+<title>손주마켓</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    background: #FFF7ED; color: #1c1917;
+    min-height: 100vh; display: flex; flex-direction: column;
+    padding: env(safe-area-inset-top) 20px calc(20px + env(safe-area-inset-bottom));
+  }
+  header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 20px 4px 16px;
+  }
+  header img { width: 52px; height: 52px; border-radius: 14px; }
+  header .name { font-size: 30px; font-weight: 800; }
+
+  /* 제일 큰 메인 버튼 — 사진 올려 주문 */
+  .order-btn {
+    width: 100%; min-height: 220px;
+    border: none; border-radius: 30px;
+    background: #EA580C; color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 12px 32px rgba(234,88,12,.35);
+    cursor: pointer; margin-top: 8px; padding: 24px;
+  }
+  .order-btn:active { transform: scale(.98); background: #c2410c; }
+  .order-btn .cam { font-size: 76px; line-height: 1; }
+  .order-btn .t1 { font-size: 40px; font-weight: 800; }
+  .order-btn .t2 { font-size: 24px; font-weight: 500; opacity: .95; }
+  input[type=file] { display: none; }
+
+  .card {
+    background: #fff; border-radius: 24px; padding: 22px 22px;
+    margin-top: 22px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  }
+  .card h2 { font-size: 24px; margin: 0 0 16px; color: #57534e; }
+
+  .status { display: flex; justify-content: space-between; position: relative; }
+  .status::before {
+    content: ''; position: absolute; top: 26px; left: 12%; right: 12%;
+    height: 4px; background: #FFEDD5; z-index: 0;
+  }
+  .st { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 1; width: 25%; }
+  .st .dot {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #FFEDD5; color: #c2410c;
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+  }
+  .st.done .dot { background: #EA580C; color: #fff; }
+  .st .lbl { font-size: 19px; color: #57534e; text-align: center; }
+  .st.done .lbl { color: #1c1917; font-weight: 700; }
+
+  .empty { font-size: 25px; color: #78716c; text-align: center; padding: 8px 0 4px; line-height: 1.5; }
+
+  .call-btn {
+    width: 100%; min-height: 100px; margin-top: 22px;
+    border: 3px solid #16a34a; border-radius: 24px;
+    background: #fff; color: #16a34a;
+    font-size: 32px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    text-decoration: none; cursor: pointer;
+  }
+  .call-btn:active { background: #f0fdf4; }
+  .call-btn .emoji { font-size: 38px; }
+
+  /* 사진 올린 뒤 확인 화면 */
+  .sheet {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    align-items: flex-end; z-index: 50;
+  }
+  .sheet.on { display: flex; }
+  .sheet-inner {
+    background: #fff; width: 100%; border-radius: 30px 30px 0 0;
+    padding: 30px 24px calc(30px + env(safe-area-inset-bottom)); text-align: center;
+  }
+  .sheet-inner img { max-width: 60%; max-height: 240px; border-radius: 18px; margin: 8px auto 18px; display:block; }
+  .sheet-inner .big { font-size: 34px; font-weight: 800; margin-bottom: 8px; }
+  .sheet-inner .small { font-size: 23px; color: #57534e; margin-bottom: 22px; line-height:1.5; }
+  .confirm-btn {
+    width: 100%; min-height: 108px; border: none; border-radius: 24px;
+    background: #EA580C; color: #fff; font-size: 34px; font-weight: 800; cursor: pointer;
+  }
+  .confirm-btn:active { background: #c2410c; }
+  .cancel { margin-top: 16px; background: none; border: none; color: #78716c; font-size: 24px; }
+</style>
+</head>
+<body>
+  <header>
+    <img src="icons/icon-192.png" alt="">
+    <span class="name">손주마켓</span>
+  </header>
+
+  <button class="order-btn" id="orderBtn">
+    <span class="cam">📷</span>
+    <span class="t1">사진 올려서 주문</span>
+    <span class="t2">사진 찍은 걸 고르기만 하면 돼요</span>
+  </button>
+  <input type="file" id="fileInput" accept="image/*">
+
+  <div class="card">
+    <h2>내 주문</h2>
+    <div id="statusBox" class="empty">아직 주문이 없어요<br>위 버튼을 눌러 시작하세요</div>
+  </div>
+
+  <a class="call-btn" href="tel:16000000">
+    <span class="emoji">📞</span> 전화로 도와드려요
+  </a>
+
+  <!-- 사진 확인 시트 -->
+  <div class="sheet" id="sheet">
+    <div class="sheet-inner">
+      <div class="big">이 사진으로 주문할까요?</div>
+      <img id="preview" alt="">
+      <div class="small">손주마켓이 대신 주문해서<br>집으로 보내드려요</div>
+      <button class="confirm-btn" id="confirmBtn">네, 주문할래요</button>
+      <br><button class="cancel" id="cancelBtn">다시 고를게요</button>
+    </div>
+  </div>
+
+<script>
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
+
+  var orderBtn = document.getElementById('orderBtn');
+  var fileInput = document.getElementById('fileInput');
+  var sheet = document.getElementById('sheet');
+  var preview = document.getElementById('preview');
+  var confirmBtn = document.getElementById('confirmBtn');
+  var cancelBtn = document.getElementById('cancelBtn');
+  var statusBox = document.getElementById('statusBox');
+
+  orderBtn.addEventListener('click', function () { fileInput.click(); });
+
+  fileInput.addEventListener('change', function () {
+    var f = fileInput.files && fileInput.files[0];
+    if (!f) return;
+    preview.src = URL.createObjectURL(f);
+    sheet.classList.add('on');
+  });
+
+  cancelBtn.addEventListener('click', function () {
+    sheet.classList.remove('on'); fileInput.value = '';
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    sheet.classList.remove('on');
+    fileInput.value = '';
+    // (실제로는 여기서 서버로 사진 전송 → 담당자 접수)
+    showStatus(0);
+  });
+
+  function showStatus(step) {
+    var steps = [
+      { i: '📨', l: '접수됨' },
+      { i: '🛒', l: '주문했어요' },
+      { i: '🚚', l: '배송중' },
+      { i: '🏠', l: '도착' }
+    ];
+    var html = '<div class="status">';
+    for (var k = 0; k < steps.length; k++) {
+      html += '<div class="st ' + (k <= step ? 'done' : '') + '">' +
+        '<div class="dot">' + steps[k].i + '</div>' +
+        '<div class="lbl">' + steps[k].l + '</div></div>';
+    }
+    html += '</div>';
+    statusBox.className = '';
+    statusBox.innerHTML = html;
+  }
+</script>
+</body>
+</html>

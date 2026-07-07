@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EA580C">
+<title>손주마켓</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    background: #FFF7ED;
+    color: #1c1917;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
+  }
+  .logo {
+    width: 120px; height: 120px; border-radius: 28px;
+    margin-top: 24px; box-shadow: 0 8px 24px rgba(234,88,12,.25);
+  }
+  h1 { font-size: 44px; font-weight: 800; margin: 20px 0 6px; }
+  .sub { font-size: 26px; color: #57534e; text-align: center; line-height: 1.5; margin: 0 0 8px; }
+
+  .steps {
+    background: #fff; border-radius: 24px; padding: 22px 24px;
+    width: 100%; max-width: 460px; margin: 24px 0 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  }
+  .step { display: flex; align-items: center; gap: 16px; font-size: 27px; padding: 10px 0; }
+  .num {
+    flex: 0 0 46px; height: 46px; border-radius: 50%;
+    background: #FFEDD5; color: #EA580C; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+  }
+
+  /* 큰 버튼 — 어르신용 */
+  .big-btn {
+    width: 100%; max-width: 460px;
+    min-height: 116px;
+    margin-top: auto;
+    border: none; border-radius: 26px;
+    background: #EA580C; color: #fff;
+    font-size: 36px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    box-shadow: 0 10px 28px rgba(234,88,12,.35);
+    cursor: pointer;
+    padding: 20px;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .big-btn:active { transform: scale(.98); background: #c2410c; }
+  .big-btn .emoji { font-size: 40px; }
+
+  .hint { font-size: 22px; color: #78716c; text-align: center; margin: 18px 0 0; line-height: 1.5; }
+
+  /* 수동 안내 (설치 신호가 안 뜰 때) */
+  .manual { display: none; background: #fff; border: 3px dashed #EA580C;
+    border-radius: 22px; padding: 22px; margin-top: 20px; width: 100%; max-width: 460px;
+    font-size: 25px; line-height: 1.6; }
+  .manual b { color: #EA580C; }
+  .installed-note { display:none; font-size: 26px; color:#16a34a; font-weight:700; margin-top:20px; text-align:center; }
+</style>
+</head>
+<body>
+  <img class="logo" src="icons/icon-192.png" alt="손주마켓">
+  <h1>손주마켓</h1>
+  <p class="sub">사진만 보내면<br>손주처럼 대신 사드려요</p>
+
+  <div class="steps">
+    <div class="step"><span class="num">1</span><span>마음에 드는 옷 <b>사진 찍기</b></span></div>
+    <div class="step"><span class="num">2</span><span>손주마켓에 <b>사진 올리기</b></span></div>
+    <div class="step"><span class="num">3</span><span>집으로 <b>배송</b> · 받고 결제</span></div>
+  </div>
+
+  <button id="mainBtn" class="big-btn">
+    <span class="emoji">📲</span><span id="mainBtnText">앱 설치하기</span>
+  </button>
+  <p id="hint" class="hint">한 번만 설치하면<br>다음부터 사진만 올리면 돼요</p>
+
+  <div id="manual" class="manual">
+    설치 버튼이 안 눌리면<br>
+    화면 <b>오른쪽 위 ⋮ 점 세 개</b>를 누르고<br>
+    <b>“앱 설치”</b> 를 눌러주세요
+  </div>
+  <p id="installedNote" class="installed-note">✅ 설치가 다 됐어요! 홈 화면 아이콘을 눌러주세요</p>
+
+<script>
+  // 서비스워커 등록 (설치 조건)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  var btn = document.getElementById('mainBtn');
+  var btnText = document.getElementById('mainBtnText');
+  var hint = document.getElementById('hint');
+  var manual = document.getElementById('manual');
+  var installedNote = document.getElementById('installedNote');
+
+  var ua = navigator.userAgent || '';
+  // 인앱 브라우저 감지 (카톡/페북/인스타/라인/네이버/밴드 등 + 안드로이드 웹뷰)
+  var inApp = /KAKAOTALK|FBAN|FBAV|Instagram|Line|NAVER|band|DaumApps|; wv\)/i.test(ua);
+  var isAndroid = /Android/i.test(ua);
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+  var deferredPrompt = null;
+
+  // 이미 설치해서 앱으로 연 경우 → 바로 주문화면
+  if (standalone) { location.replace('app.html'); }
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    // 설치 가능! 버튼을 진짜 설치용으로
+    setInstallReady();
+  });
+
+  window.addEventListener('appinstalled', function () {
+    btn.style.display = 'none';
+    hint.style.display = 'none';
+    manual.style.display = 'none';
+    installedNote.style.display = 'block';
+  });
+
+  function setInstallReady() {
+    btnText.textContent = '앱 설치하기';
+    hint.innerHTML = '아래 <b>“설치”</b> 를 한 번 더 눌러주세요';
+  }
+
+  function intentToChrome() {
+    var host = location.host + location.pathname + location.search;
+    var fallback = encodeURIComponent(location.href);
+    var intentUrl = 'intent://' + host +
+      '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + fallback + ';end';
+    location.href = intentUrl;
+  }
+
+  // 인앱 브라우저면 → 우선 크롬으로 튕겨내기
+  if (inApp && isAndroid) {
+    btnText.textContent = '앱 설치하기';
+    hint.innerHTML = '버튼을 누르면 설치 화면으로 넘어가요';
+  }
+
+  btn.addEventListener('click', function () {
+    // 1) 인앱이면 크롬으로 탈출
+    if (inApp && isAndroid && !deferredPrompt) {
+      intentToChrome();
+      return;
+    }
+    // 2) 설치 신호가 준비됐으면 진짜 설치 팝업
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(function () { deferredPrompt = null; });
+      return;
+    }
+    // 3) 신호가 안 온 경우 → 수동 안내 (안전장치)
+    manual.style.display = 'block';
+    manual.scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
