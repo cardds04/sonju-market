@@ -39,6 +39,18 @@
     display: flex; align-items: center; justify-content: center; font-size: 26px;
   }
 
+  /* 크롬 2번째 화면 전용 */
+  #installView { width: 100%; max-width: 460px; text-align: center; display: none; }
+  .done-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #DCFCE7; color: #16a34a; font-weight: 800; font-size: 24px;
+    padding: 10px 22px; border-radius: 999px; margin: 28px 0 10px;
+  }
+  .install-title { font-size: 34px; font-weight: 800; line-height: 1.4; margin: 8px 0 4px; }
+  .install-title b { color: #EA580C; }
+  .arrow { font-size: 60px; line-height: 1; margin: 26px 0 4px; animation: bounce 1s infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
+
   /* 큰 버튼 — 어르신용 */
   .big-btn {
     width: 100%; max-width: 460px;
@@ -70,12 +82,22 @@
 <body>
   <img class="logo" src="icons/icon-192.png" alt="손주마켓">
   <h1>손주마켓</h1>
-  <p class="sub">사진만 보내면<br>손주처럼 대신 사드려요</p>
 
-  <div class="steps">
-    <div class="step"><span class="num">1</span><span>마음에 드는 옷 <b>사진 찍기</b></span></div>
-    <div class="step"><span class="num">2</span><span>손주마켓에 <b>사진 올리기</b></span></div>
-    <div class="step"><span class="num">3</span><span>집으로 <b>배송</b> · 받고 결제</span></div>
+  <!-- 1번 화면: 카톡 등 인앱 브라우저 (서비스 소개) -->
+  <div id="introView" style="width:100%; display:flex; flex-direction:column; align-items:center;">
+    <p class="sub">사진만 보내면<br>손주처럼 대신 사드려요</p>
+    <div class="steps">
+      <div class="step"><span class="num">1</span><span>마음에 드는 옷 <b>사진 찍기</b></span></div>
+      <div class="step"><span class="num">2</span><span>손주마켓에 <b>사진 올리기</b></span></div>
+      <div class="step"><span class="num">3</span><span>집으로 <b>배송</b> · 받고 결제</span></div>
+    </div>
+  </div>
+
+  <!-- 2번 화면: 크롬 (설명 없이 설치만) -->
+  <div id="installView">
+    <div class="done-badge">✅ 잘 오셨어요</div>
+    <div class="install-title">이제 <b>마지막 한 번!</b></div>
+    <div class="arrow">👇</div>
   </div>
 
   <button id="mainBtn" class="big-btn">
@@ -101,6 +123,8 @@
   var hint = document.getElementById('hint');
   var manual = document.getElementById('manual');
   var installedNote = document.getElementById('installedNote');
+  var introView = document.getElementById('introView');
+  var installView = document.getElementById('installView');
 
   var ua = navigator.userAgent || '';
   // 인앱 브라우저 감지 (카톡/페북/인스타/라인/네이버/밴드 등 + 안드로이드 웹뷰)
@@ -113,24 +137,32 @@
   // 이미 설치해서 앱으로 연 경우 → 바로 주문화면
   if (standalone) { location.replace('app.html'); }
 
+  // ── 화면 분기 ──
+  // 인앱(카톡 등): 소개 화면 → 버튼은 크롬으로 튕김
+  // 크롬/삼성: 설치 화면(설명 없음) → 버튼은 진짜 설치
+  if (inApp && isAndroid) {
+    introView.style.display = 'flex';
+    installView.style.display = 'none';
+    hint.innerHTML = '버튼을 누르면 설치 화면으로 넘어가요';
+  } else {
+    introView.style.display = 'none';
+    installView.style.display = 'block';
+    hint.innerHTML = '아래 <b>“설치”</b> 한 번만 더 눌러주세요';
+  }
+
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     deferredPrompt = e;
-    // 설치 가능! 버튼을 진짜 설치용으로
-    setInstallReady();
   });
 
   window.addEventListener('appinstalled', function () {
     btn.style.display = 'none';
     hint.style.display = 'none';
     manual.style.display = 'none';
+    introView.style.display = 'none';
+    installView.style.display = 'none';
     installedNote.style.display = 'block';
   });
-
-  function setInstallReady() {
-    btnText.textContent = '앱 설치하기';
-    hint.innerHTML = '아래 <b>“설치”</b> 를 한 번 더 눌러주세요';
-  }
 
   function intentToChrome() {
     var host = location.host + location.pathname + location.search;
@@ -138,12 +170,6 @@
     var intentUrl = 'intent://' + host +
       '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + fallback + ';end';
     location.href = intentUrl;
-  }
-
-  // 인앱 브라우저면 → 우선 크롬으로 튕겨내기
-  if (inApp && isAndroid) {
-    btnText.textContent = '앱 설치하기';
-    hint.innerHTML = '버튼을 누르면 설치 화면으로 넘어가요';
   }
 
   btn.addEventListener('click', function () {
