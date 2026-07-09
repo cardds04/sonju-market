@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>손주마켓 · 관리자</title>
+<title>어르신 구매 도움센터 · 관리자</title>
 <link rel="icon" href="icons/icon-192.png">
 <style>
   * { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word; -webkit-tap-highlight-color: transparent; }
@@ -75,7 +75,7 @@
 </style>
 </head>
 <body>
-<header><img src="icons/icon-192.png" alt=""><span class="name">손주마켓 관리자</span><span class="badge" id="newBadge"></span></header>
+<header><img src="icons/icon-192.png" alt=""><span class="name">구매 도움센터 · 관리자</span><span class="badge" id="newBadge"></span></header>
 
 <div class="wrap">
   <div class="cutoff" id="cutoff"></div>
@@ -168,7 +168,7 @@
         '<label>물건 이름</label><input class="f" id="f-item" value="'+(o.itemName||'')+'" placeholder="예: 꽃무늬 봄 남방">' +
         '<label>브랜드 / 사는 곳 (사이트 주소)</label><input class="f" id="f-site" value="'+(o.siteUrl||'')+'" placeholder="예: 무신사 / 링크">' +
         '<label>물건값 (최저가, 원)</label><input class="f" id="f-price" type="number" inputmode="numeric" value="'+(o.price!=null?o.price:'')+'" placeholder="예: 39000">' +
-        '<label>수수료 (원)</label><input class="f" id="f-fee" type="number" inputmode="numeric" value="'+(o.fee!=null?o.fee:'')+'" placeholder="예: 5000">' +
+        '<label>심부름비 (지금은 무료 운영 — 비워두세요)</label><input class="f" id="f-fee" type="number" inputmode="numeric" value="'+(o.fee!=null?o.fee:'')+'" placeholder="0 (무료)">' +
         '<div class="total-line" id="totalLine"></div>' +
         '<button class="quote-btn" id="quoteBtn">💰 금액 확정 → 고객에게 안내</button>' +
         '<label>메모</label><input class="f" id="f-note" value="'+(o.adminNote||'')+'" placeholder="특이사항">' +

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#EA580C">
-<title>손주마켓</title>
+<title>어르신 구매 도움센터</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon-192.png">
 <style>
@@ -14,90 +14,98 @@
   body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: #FFF7ED; color: #1c1917; min-height: 100vh; }
   .wrap { max-width: 520px; margin: 0 auto; padding: 0 18px calc(28px + env(safe-area-inset-bottom)); }
 
-  header { display: flex; align-items: center; gap: 12px; padding: calc(16px + env(safe-area-inset-top)) 4px 14px;
-    position: sticky; top: 0; background: #FFF7ED; z-index: 5; }
-  header img { width: 50px; height: 50px; border-radius: 14px; }
-  header .name { font-size: clamp(24px, 7vw, 30px); font-weight: 800; }
+  header { display: flex; align-items: center; gap: 11px; padding: calc(16px + env(safe-area-inset-top)) 4px 12px; position: sticky; top: 0; background: #FFF7ED; z-index: 5; }
+  header img { width: 46px; height: 46px; border-radius: 13px; }
+  header .name { font-size: clamp(21px, 6vw, 26px); font-weight: 800; }
 
-  .order-btn { width: 100%; min-height: 180px; border: none; border-radius: 28px; background: #EA580C; color: #fff;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-    box-shadow: 0 12px 30px rgba(234,88,12,.32); cursor: pointer; margin-top: 6px; padding: 22px; }
+  .free-badge { display: flex; align-items: center; justify-content: center; gap: 8px; background: #DCFCE7; color: #15803d; border: 2px solid #86efac; border-radius: 999px; padding: 12px 18px; font-size: clamp(20px, 5.4vw, 23px); font-weight: 800; margin-top: 6px; }
+
+  .headline { text-align: center; font-size: clamp(38px, 11vw, 50px); font-weight: 800; line-height: 1.2; margin: 26px 0 10px; }
+  .subline { text-align: center; font-size: clamp(21px, 5.6vw, 24px); color: #57534e; margin: 0 0 20px; }
+
+  /* 큰 메인 버튼 */
+  .order-btn { width: 100%; min-height: 150px; border: none; border-radius: 28px; background: #EA580C; color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    box-shadow: 0 12px 30px rgba(234,88,12,.32); cursor: pointer; padding: 20px; }
   .order-btn:active { transform: scale(.98); background: #c2410c; }
-  .order-btn .cam { font-size: 64px; line-height: 1; }
-  .order-btn .t1 { font-size: clamp(30px, 8.5vw, 38px); font-weight: 800; text-align: center; }
-  .order-btn .t2 { font-size: clamp(18px, 5vw, 22px); font-weight: 500; opacity: .95; text-align: center; }
+  .order-btn .cam { font-size: 56px; line-height: 1; }
+  .order-btn .t1 { font-size: clamp(32px, 9vw, 40px); font-weight: 800; }
+  .order-btn .t2 { font-size: clamp(18px, 4.8vw, 21px); font-weight: 500; opacity: .95; text-align: center; }
   input[type=file] { display: none; }
 
-  /* 주문 방법 안내 (그림) */
-  .howto { background: #fff; border-radius: 22px; padding: 18px 12px; margin-top: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.06); }
-  .howto .htline { font-size: clamp(20px, 5.4vw, 23px); font-weight: 800; color: #c2410c; text-align: center; margin-bottom: 16px; line-height: 1.4; }
-  .howto .steps3 { display: flex; align-items: flex-start; justify-content: space-between; }
-  .howto .s3 { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 30%; }
-  .howto .s3 .ic { font-size: 46px; line-height: 1; }
-  .howto .s3 .tx { font-size: clamp(16px, 4.4vw, 19px); font-weight: 700; text-align: center; line-height: 1.35; }
-  .howto .arrow3 { font-size: 24px; color: #FDBA74; padding-top: 14px; }
+  .sub-btn { width: 100%; min-height: 84px; margin-top: 14px; border: 3px solid #EA580C; border-radius: 22px; background: #fff; color: #c2410c;
+    font-size: clamp(24px, 6.4vw, 28px); font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+  .sub-btn:active { background: #fff7ed; }
+  .sub-btn .cnt { background: #EA580C; color: #fff; font-size: 19px; border-radius: 999px; padding: 3px 12px; }
 
-  .cancel-tag { font-size: 18px; color: #dc2626; font-weight: 800; margin-top: 5px; }
+  .reassure { text-align: center; font-size: clamp(20px, 5.4vw, 23px); font-weight: 700; color: #15803d; margin: 22px 0 4px; }
 
-  /* 당일처리 배너 */
-  .promise { margin-top: 14px; background: #FEF3C7; border: 2px solid #FCD34D; border-radius: 18px;
-    padding: 16px 18px; font-size: clamp(19px, 5.2vw, 22px); font-weight: 700; color: #92400e; text-align: center; line-height: 1.45; }
+  /* 3단계 */
+  .howto { background: #fff; border-radius: 22px; padding: 20px 12px; margin-top: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.06); }
+  .howto .htline { font-size: 22px; font-weight: 800; color: #c2410c; text-align: center; margin-bottom: 16px; }
+  .steps3 { display: flex; align-items: flex-start; justify-content: space-between; }
+  .s3 { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 30%; }
+  .s3 .ic { font-size: 46px; line-height: 1; }
+  .s3 .num { font-size: 20px; font-weight: 800; color: #EA580C; }
+  .s3 .tx { font-size: clamp(17px, 4.6vw, 20px); font-weight: 700; text-align: center; line-height: 1.35; }
+  .arrow3 { font-size: 24px; color: #FDBA74; padding-top: 20px; }
 
-  .section-title { font-size: 24px; font-weight: 800; color: #57534e; margin: 26px 4px 12px; }
-
-  .card { background: #fff; border-radius: 22px; padding: 14px; display: flex; align-items: center; gap: 16px;
-    margin-bottom: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.06); cursor: pointer; border: 3px solid transparent; }
-  .card:active { transform: scale(.99); }
-  .card.hot { border-color: #FDBA74; }
-  .card.money { border-color: #86efac; }
-  .card .thumb { width: 92px; height: 92px; border-radius: 16px; object-fit: cover; flex: 0 0 92px; background: #f5f5f4; }
-  .card .info { flex: 1; min-width: 0; }
-  .card .st-line { font-size: clamp(23px, 6.3vw, 27px); font-weight: 800; display: flex; align-items: center; gap: 8px; }
-  .card .st-emoji { font-size: 29px; }
-  .card .date { font-size: 18px; color: #78716c; margin-top: 6px; }
-  .card .price-tag { font-size: 20px; color: #16a34a; font-weight: 800; margin-top: 4px; }
-  .card .go { font-size: 30px; color: #d6d3d1; flex: 0 0 auto; }
-
-  .empty { background: #fff; border-radius: 22px; padding: 34px 20px; text-align: center; font-size: 23px; color: #78716c; line-height: 1.6; box-shadow: 0 4px 14px rgba(0,0,0,.05); }
-  .past-toggle { width: 100%; background: none; border: none; color: #78716c; font-size: 21px; padding: 14px; cursor: pointer; text-decoration: underline; }
+  .need-title { font-size: 22px; font-weight: 800; color: #57534e; margin: 28px 4px 12px; }
+  .need-row { display: flex; gap: 12px; }
+  .need-btn { flex: 1; min-height: 96px; border: 3px solid #d6d3d1; border-radius: 20px; background: #fff; color: #44403c;
+    font-size: clamp(21px, 5.6vw, 24px); font-weight: 800; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+  .need-btn:active { background: #f5f5f4; }
+  .need-btn .ic { font-size: 32px; }
 
   .call-btn { width: 100%; min-height: 88px; margin-top: 22px; border: 3px solid #16a34a; border-radius: 22px; background: #fff; color: #16a34a;
     font-size: clamp(26px, 7vw, 30px); font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; }
   .call-btn:active { background: #f0fdf4; }
+  .edit-info { width: 100%; background: none; border: none; color: #78716c; font-size: 19px; padding: 16px; margin-top: 6px; text-decoration: underline; cursor: pointer; }
 
-  .detail { position: fixed; inset: 0; background: #FFF7ED; z-index: 20; overflow-y: auto; display: none; }
-  .detail.on { display: block; }
+  /* 카드 (목록) */
+  .card { background: #fff; border-radius: 22px; padding: 14px; display: flex; align-items: center; gap: 16px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.06); cursor: pointer; border: 3px solid transparent; }
+  .card:active { transform: scale(.99); }
+  .card.hot { border-color: #FDBA74; } .card.money { border-color: #86efac; }
+  .card .thumb { width: 88px; height: 88px; border-radius: 16px; object-fit: cover; flex: 0 0 88px; background: #f5f5f4; }
+  .card .info { flex: 1; min-width: 0; }
+  .card .st-line { font-size: clamp(23px, 6.2vw, 27px); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .card .st-emoji { font-size: 28px; }
+  .card .date { font-size: 18px; color: #78716c; margin-top: 6px; }
+  .card .price-tag { font-size: 20px; color: #16a34a; font-weight: 800; margin-top: 4px; }
+  .card .cancel-tag { font-size: 18px; color: #dc2626; font-weight: 800; margin-top: 5px; }
+  .card .go { font-size: 30px; color: #d6d3d1; flex: 0 0 auto; }
+  .empty { background: #fff; border-radius: 22px; padding: 34px 20px; text-align: center; font-size: 23px; color: #78716c; line-height: 1.6; box-shadow: 0 4px 14px rgba(0,0,0,.05); }
+  .past-toggle { width: 100%; background: none; border: none; color: #78716c; font-size: 21px; padding: 14px; cursor: pointer; text-decoration: underline; }
+
+  /* 전체 화면 (목록/상세/등록/반품/보호자) */
+  .screen { position: fixed; inset: 0; background: #FFF7ED; z-index: 20; overflow-y: auto; display: none; }
+  .screen.on { display: block; }
   .back-bar { position: sticky; top: 0; background: #FFF7ED; padding: calc(14px + env(safe-area-inset-top)) 4px 10px; z-index: 3; }
-  .back-btn { border: none; background: #fff; border-radius: 16px; font-size: 24px; font-weight: 800; padding: 14px 22px; cursor: pointer;
-    box-shadow: 0 3px 10px rgba(0,0,0,.08); display: inline-flex; align-items: center; gap: 8px; }
-  .detail-photo { width: 100%; border-radius: 22px; margin: 6px 0 8px; background: #fff; display: block; }
+  .back-btn { border: none; background: #fff; border-radius: 16px; font-size: 24px; font-weight: 800; padding: 14px 22px; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.08); display: inline-flex; align-items: center; gap: 8px; }
+  .screen-title { font-size: clamp(27px, 7.4vw, 32px); font-weight: 800; text-align: center; margin: 6px 0 14px; }
 
+  .detail-photo { width: 100%; border-radius: 22px; margin: 6px 0 8px; background: #fff; display: block; }
   .stepper { display: flex; justify-content: space-between; position: relative; margin: 24px 2px 10px; }
   .stepper::before { content: ''; position: absolute; top: 28px; left: 9%; right: 9%; height: 5px; background: #FFEDD5; z-index: 0; }
   .stp { display: flex; flex-direction: column; align-items: center; gap: 7px; z-index: 1; width: 20%; }
   .stp .dot { width: 54px; height: 54px; border-radius: 50%; background: #FFEDD5; color: #c2410c; display: flex; align-items: center; justify-content: center; font-size: 26px; }
   .stp.done .dot { background: #EA580C; color: #fff; }
-  .stp .lbl { font-size: 17px; color: #78716c; text-align: center; }
-  .stp.done .lbl { color: #1c1917; font-weight: 700; }
-
+  .stp .lbl { font-size: 17px; color: #78716c; text-align: center; } .stp.done .lbl { color: #1c1917; font-weight: 700; }
   .now-card { background: #fff; border-radius: 22px; padding: 24px; margin-top: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.06); text-align: center; }
   .now-card .big-emoji { font-size: 56px; }
   .now-card .now-title { font-size: clamp(28px, 8vw, 34px); font-weight: 800; margin: 8px 0 6px; }
   .now-card .now-msg { font-size: clamp(21px, 6vw, 25px); color: #57534e; line-height: 1.55; white-space: pre-line; }
-
-  /* 금액 안내 (quoted) - 후불이라 아직 낼 필요 없음 안내 */
   .quote-card { background: #F0FDF4; border: 3px solid #16a34a; border-radius: 22px; padding: 22px; margin-top: 16px; text-align: center; }
   .quote-card .q-label { font-size: 22px; color: #15803d; font-weight: 700; }
   .quote-card .q-amount { font-size: clamp(40px, 12vw, 52px); font-weight: 800; color: #15803d; margin: 6px 0; }
-  .quote-card .q-note { font-size: 21px; color: #57534e; line-height: 1.5; }
-
+  .quote-card .q-note { font-size: 21px; color: #57534e; line-height: 1.5; white-space: pre-line; }
   .pay-card { background: #FFF7ED; border: 3px solid #EA580C; border-radius: 22px; padding: 22px; margin-top: 16px; }
   .pay-card h3 { font-size: 25px; margin: 0 0 12px; color: #c2410c; }
   .pay-row { display: flex; justify-content: space-between; font-size: 23px; padding: 6px 0; }
   .pay-row.total { font-size: 28px; font-weight: 800; border-top: 2px dashed #FDBA74; margin-top: 8px; padding-top: 12px; }
   .pay-acct { background: #fff; border-radius: 16px; padding: 16px; margin-top: 14px; font-size: 24px; font-weight: 700; text-align: center; }
+  .free-note { text-align: center; font-size: 20px; color: #15803d; font-weight: 700; margin-top: 10px; }
 
-  /* 취소 요청 */
   .cancel-req-btn { width: 100%; min-height: 74px; margin-top: 20px; border: 3px solid #fca5a5; border-radius: 20px; background: #fff; color: #dc2626; font-size: clamp(22px, 6vw, 25px); font-weight: 800; cursor: pointer; }
   .cancel-req-btn:active { background: #fef2f2; }
   .cb-note { text-align: center; font-size: 19px; color: #78716c; margin-top: 10px; line-height: 1.4; }
@@ -105,20 +113,20 @@
   .cancel-box .cb-t { font-size: clamp(24px, 6.5vw, 28px); font-weight: 800; color: #dc2626; }
   .cancel-box .cb-m { font-size: 21px; color: #57534e; margin-top: 8px; line-height: 1.5; white-space: pre-line; }
 
-  /* 최초 등록 화면 */
-  .reg { position: fixed; inset: 0; background: #FFF7ED; z-index: 30; overflow-y: auto; display: none; }
-  .reg.on { display: block; }
-  .reg .wrap { padding-top: calc(22px + env(safe-area-inset-top)); text-align: center; }
-  .reg-logo { width: 84px; height: 84px; border-radius: 22px; margin: 6px auto 0; }
-  .reg-title { font-size: clamp(25px, 7.2vw, 31px); font-weight: 800; margin: 14px 0 8px; line-height: 1.35; }
-  .reg-sub { font-size: clamp(19px, 5vw, 22px); color: #57534e; line-height: 1.5; margin: 0 0 12px; }
+  /* 등록 입력 */
+  .reg-logo { width: 84px; height: 84px; border-radius: 22px; margin: 6px auto 0; display: block; }
+  .reg-title { font-size: clamp(25px, 7.2vw, 31px); font-weight: 800; margin: 14px 0 8px; line-height: 1.35; text-align: center; }
+  .reg-sub { font-size: clamp(19px, 5vw, 22px); color: #57534e; line-height: 1.5; margin: 0 0 12px; text-align: center; }
   .reg-label { display: block; text-align: left; font-size: 21px; font-weight: 800; color: #c2410c; margin: 20px 4px 8px; }
   .reg-input { width: 100%; font-size: 24px; padding: 18px; border: 3px solid #FDBA74; border-radius: 18px; background: #fff; }
   .reg-input:focus { outline: none; border-color: #EA580C; }
   .reg-btn { width: 100%; min-height: 100px; margin-top: 28px; border: none; border-radius: 24px; background: #EA580C; color: #fff; font-size: clamp(28px, 8vw, 34px); font-weight: 800; cursor: pointer; }
   .reg-btn:active { background: #c2410c; }
   .reg-cancel { width: 100%; background: none; border: none; color: #78716c; font-size: 21px; padding: 16px; margin-top: 6px; cursor: pointer; }
-  .edit-info { width: 100%; background: none; border: none; color: #78716c; font-size: 19px; padding: 16px; margin-top: 6px; text-decoration: underline; cursor: pointer; }
+
+  .info-card { background: #fff; border-radius: 22px; padding: 24px; margin-top: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.06); font-size: clamp(21px, 5.6vw, 24px); line-height: 1.6; text-align: center; white-space: pre-line; }
+  .g-line { background: #fff; border-radius: 18px; padding: 16px 18px; margin-bottom: 12px; font-size: 21px; }
+  .g-line b { color: #78716c; }
 
   .sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); align-items: flex-end; z-index: 40; }
   .sheet.on { display: flex; }
@@ -135,44 +143,72 @@
 </style>
 </head>
 <body>
+<!-- ===== 홈(랜딩) ===== -->
 <div class="wrap" id="home">
-  <header><img src="icons/icon-192.png" alt=""><span class="name">손주마켓</span></header>
+  <header><img src="icons/icon-192.png" alt=""><span class="name">어르신 구매 도움센터</span></header>
+
+  <div class="free-badge">💚 이용료 없이 지원</div>
+
+  <div class="headline">캡쳐해서<br>사진으로<br>보내세요</div>
+  <div class="subline">어려운 주문은 도와드려요.</div>
 
   <button class="order-btn" id="orderBtn">
-    <span class="cam">📷</span>
-    <span class="t1">사진 올려서 주문</span>
-    <span class="t2">사진 고르기만 하면 돼요</span>
+    <span class="cam">📷</span><span class="t1">사진 보내기</span>
+    <span class="t2">캡쳐한 화면을 고르기만 하면 돼요</span>
   </button>
   <input type="file" id="fileInput" accept="image/*">
 
+  <button class="sub-btn" id="listBtn">📋 내 주문 보기 <span class="cnt" id="ongoingCnt" style="display:none"></span></button>
+
+  <div class="reassure">✅ 주문 전에 꼭 확인해 드려요</div>
+
   <div class="howto">
-    <div class="htline">📸 휴대폰에서 캡쳐한 사진을<br>올려주세요</div>
+    <div class="htline">이렇게 3단계예요</div>
     <div class="steps3">
-      <div class="s3"><div class="ic">📱</div><div class="tx">① 마음에 든 옷<br>사진 찍기</div></div>
+      <div class="s3"><div class="ic">📱</div><div class="num">1. 캡쳐</div><div class="tx">화면을 찍어요</div></div>
       <div class="arrow3">▶</div>
-      <div class="s3"><div class="ic">⬆️</div><div class="tx">② 위 버튼 눌러<br>사진 올리기</div></div>
+      <div class="s3"><div class="ic">⬆️</div><div class="num">2. 보내기</div><div class="tx">사진을 올려요</div></div>
       <div class="arrow3">▶</div>
-      <div class="s3"><div class="ic">🏠</div><div class="tx">③ 집에서<br>받기</div></div>
+      <div class="s3"><div class="ic">📦</div><div class="num">3. 택배</div><div class="tx">집에서 받아요</div></div>
     </div>
   </div>
 
-  <div class="promise" id="promise"></div>
-
-  <div class="section-title">내 주문</div>
-  <div id="ongoing"></div>
-  <button class="past-toggle" id="pastToggle" style="display:none"></button>
-  <div id="past" style="display:none"></div>
+  <div class="need-title">필요할 때</div>
+  <div class="need-row">
+    <button class="need-btn" id="returnsBtn"><span class="ic">↩️</span>반품 도움</button>
+    <button class="need-btn" id="guardianBtn"><span class="ic">👨‍👩‍👧</span>보호자 보기</button>
+  </div>
 
   <a class="call-btn" href="tel:16000000">📞 전화로 도와드려요</a>
   <button class="edit-info" id="editInfoBtn">⚙️ 내 정보 고치기 (주소·연락처)</button>
 </div>
 
-<!-- 최초 등록 -->
-<div class="reg" id="reg">
+<!-- ===== 내 주문 목록 ===== -->
+<div class="screen" id="list">
+  <div class="wrap">
+    <div class="back-bar"><button class="back-btn" data-back="list">◀ 뒤로</button></div>
+    <div class="screen-title">내 주문</div>
+    <div id="ongoing"></div>
+    <button class="past-toggle" id="pastToggle" style="display:none"></button>
+    <div id="past" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ===== 주문 상세 ===== -->
+<div class="screen" id="detail">
+  <div class="wrap">
+    <div class="back-bar"><button class="back-btn" data-back="detail">◀ 뒤로</button></div>
+    <div id="detailBody"></div>
+    <a class="call-btn" href="tel:16000000">📞 전화로 물어보기</a>
+  </div>
+</div>
+
+<!-- ===== 등록 ===== -->
+<div class="screen" id="reg">
   <div class="wrap">
     <img class="reg-logo" src="icons/icon-192.png" alt="">
-    <div class="reg-title" id="regTitle">손주마켓에 오신 걸<br>환영해요 🎉</div>
-    <div class="reg-sub" id="regSub">딱 한 번만 적어주세요.<br>다음부터는 사진만 올리면<br>이 주소로 보내드려요.</div>
+    <div class="reg-title" id="regTitle"></div>
+    <div class="reg-sub" id="regSub"></div>
     <label class="reg-label">성함 (이름)</label>
     <input class="reg-input" id="r-name" placeholder="예: 김순자">
     <label class="reg-label">전화번호</label>
@@ -186,20 +222,37 @@
   </div>
 </div>
 
-<div class="detail" id="detail">
+<!-- ===== 반품 도움 ===== -->
+<div class="screen" id="returns">
   <div class="wrap">
-    <div class="back-bar"><button class="back-btn" id="backBtn">◀ 뒤로</button></div>
-    <div id="detailBody"></div>
-    <a class="call-btn" href="tel:16000000">📞 전화로 물어보기</a>
+    <div class="back-bar"><button class="back-btn" data-back="returns">◀ 뒤로</button></div>
+    <div class="screen-title">↩️ 반품 도움</div>
+    <div class="info-card">받으신 물건이 마음에 안 드시거나
+잘못 왔으면
+버리지 마시고 그대로 두세요.
+
+전화 주시면 반품·교환을
+저희가 대신 처리해 드려요.</div>
+    <a class="call-btn" href="tel:16000000">📞 반품 전화하기</a>
   </div>
 </div>
 
+<!-- ===== 보호자 보기 ===== -->
+<div class="screen" id="guardian">
+  <div class="wrap">
+    <div class="back-bar"><button class="back-btn" data-back="guardian">◀ 뒤로</button></div>
+    <div class="screen-title">👨‍👩‍👧 보호자 보기</div>
+    <div id="guardianBody"></div>
+  </div>
+</div>
+
+<!-- 사진 확인 시트 -->
 <div class="sheet" id="sheet">
   <div class="sheet-inner">
-    <div class="big">이 사진으로 주문할까요?</div>
+    <div class="big">이 사진으로 보낼까요?</div>
     <img id="preview" alt="">
     <div class="small" id="sheetPromise"></div>
-    <button class="confirm-btn" id="confirmBtn">네, 주문할래요</button>
+    <button class="confirm-btn" id="confirmBtn">네, 보낼래요</button>
     <br><button class="cancel" id="cancelBtn">다시 고를게요</button>
   </div>
 </div>
@@ -212,11 +265,16 @@
   var $ = function (id) { return document.getElementById(id); };
   var pendingPhoto = null;
 
-  // 당일처리 문구
   var proc = Store.processing();
-  $('promise').textContent = proc.badge;
   $('sheetPromise').textContent = proc.line;
 
+  // ── 화면 전환 ──
+  function openScreen(id) { $(id).classList.add('on'); window.scrollTo(0, 0); $(id).scrollTop = 0; }
+  function closeScreen(id) { $(id).classList.remove('on'); }
+  var backs = document.querySelectorAll('.back-btn');
+  for (var b = 0; b < backs.length; b++) backs[b].addEventListener('click', function () { closeScreen(this.getAttribute('data-back')); render(); });
+
+  // ── 사진 첨부 ──
   $('orderBtn').addEventListener('click', function () { $('fileInput').click(); });
   $('fileInput').addEventListener('change', function () {
     var f = this.files && this.files[0]; if (!f) return;
@@ -225,45 +283,51 @@
   $('cancelBtn').addEventListener('click', function () { $('sheet').classList.remove('on'); pendingPhoto = null; $('fileInput').value = ''; });
   $('confirmBtn').addEventListener('click', function () {
     if (!pendingPhoto) return;
-    Store.create({ photo: pendingPhoto });
-    pendingPhoto = null; $('fileInput').value = ''; $('sheet').classList.remove('on');
-    toast('주문이 들어갔어요! 👍'); render();
+    Store.create({ photo: pendingPhoto }); pendingPhoto = null; $('fileInput').value = ''; $('sheet').classList.remove('on');
+    toast('주문이 들어갔어요! 👍'); render(); openScreen('list');
   });
-
   function downscale(file, maxW, cb) {
     var img = new Image();
     img.onload = function () {
-      var scale = Math.min(1, maxW / img.width);
-      var w = Math.round(img.width * scale), h = Math.round(img.height * scale);
-      var c = document.createElement('canvas'); c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
-      try { cb(c.toDataURL('image/jpeg', 0.8)); }
-      catch (e) { var r = new FileReader(); r.onload = function () { cb(r.result); }; r.readAsDataURL(file); }
+      var scale = Math.min(1, maxW / img.width); var w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+      var c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+      try { cb(c.toDataURL('image/jpeg', 0.8)); } catch (e) { var r = new FileReader(); r.onload = function () { cb(r.result); }; r.readAsDataURL(file); }
     };
     img.onerror = function () { var r = new FileReader(); r.onload = function () { cb(r.result); }; r.readAsDataURL(file); };
     img.src = URL.createObjectURL(file);
   }
 
+  // ── 목록 열기 버튼 ──
+  $('listBtn').addEventListener('click', function () { render(); openScreen('list'); });
+  $('returnsBtn').addEventListener('click', function () { openScreen('returns'); });
+  $('guardianBtn').addEventListener('click', function () { renderGuardian(); openScreen('guardian'); });
+
+  // ── 헬퍼 ──
   function fmtDate(ts) { var d = new Date(ts); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
-  function money(n) { return n == null ? null : Number(n).toLocaleString('ko-KR') + '원'; }
-  function total(o) { return (Number(o.price) || 0) + (Number(o.fee) || 0); }
+  function won(n) { return n == null ? null : Number(n).toLocaleString('ko-KR') + '원'; }
+  function payTotal(o) { return Store.freeMode() ? (Number(o.price) || 0) : ((Number(o.price) || 0) + (Number(o.fee) || 0)); }
 
   function cardHtml(o) {
     var s = Store.stage(o.status);
     var cls = (o.status === 'arrived') ? ' hot' : (o.status === 'quoted' ? ' money' : '');
-    var priceTag = (o.status === 'quoted' && o.price != null) ? '<div class="price-tag">💰 ' + money(total(o)) + '</div>' : '';
+    var priceTag = (o.status === 'quoted' && o.price != null) ? '<div class="price-tag">💰 ' + won(payTotal(o)) + '</div>' : '';
     var cancelTag = (o.cancelRequested && o.status !== 'canceled') ? '<div class="cancel-tag">🚫 취소 요청됨 (전화 확인 중)</div>' : '';
-    return '<div class="card' + cls + '" data-id="' + o.id + '">' +
-      '<img class="thumb" src="' + o.photo + '" alt="">' +
+    return '<div class="card' + cls + '" data-id="' + o.id + '"><img class="thumb" src="' + o.photo + '" alt="">' +
       '<div class="info"><div class="st-line"><span class="st-emoji">' + s.emoji + '</span>' + s.userLabel + '</div>' +
       '<div class="date">' + fmtDate(o.createdAt) + ' 주문</div>' + priceTag + cancelTag + '</div><div class="go">›</div></div>';
   }
 
+  var pastOpen = false;
   function render() {
     var all = Store.orders();
     var ongoing = all.filter(function (o) { return o.status !== 'done' && o.status !== 'canceled'; });
     var past = all.filter(function (o) { return o.status === 'done' || o.status === 'canceled'; });
-    if (all.length === 0) $('ongoing').innerHTML = '<div class="empty">아직 주문이 없어요<br>위 <b>큰 주황 버튼</b>을 눌러<br>사진을 올려보세요</div>';
+
+    // 홈의 '내 주문 보기' 건수
+    if (ongoing.length > 0) { $('ongoingCnt').style.display = 'inline-block'; $('ongoingCnt').textContent = '진행 중 ' + ongoing.length; }
+    else $('ongoingCnt').style.display = 'none';
+
+    if (all.length === 0) $('ongoing').innerHTML = '<div class="empty">아직 주문이 없어요<br>홈에서 <b>큰 주황 버튼</b>을 눌러<br>사진을 보내보세요</div>';
     else if (ongoing.length === 0) $('ongoing').innerHTML = '<div class="empty">진행 중인 주문이 없어요</div>';
     else $('ongoing').innerHTML = ongoing.map(cardHtml).join('');
 
@@ -273,10 +337,10 @@
     else { $('pastToggle').style.display = 'none'; $('past').innerHTML = ''; }
     bindCards();
   }
-  var pastOpen = false;
   $('pastToggle').addEventListener('click', function () { pastOpen = !pastOpen; $('past').style.display = pastOpen ? 'block' : 'none'; render(); });
-  function bindCards() { var c = document.querySelectorAll('.card'); for (var i = 0; i < c.length; i++) c[i].addEventListener('click', function () { openDetail(this.getAttribute('data-id')); }); }
+  function bindCards() { var c = document.querySelectorAll('#list .card, #guardian .card'); for (var i = 0; i < c.length; i++) c[i].addEventListener('click', function () { openDetail(this.getAttribute('data-id')); }); }
 
+  // ── 상세 ──
   var currentDetailId = null;
   function openDetail(id) {
     var o = Store.get(id); if (!o) return;
@@ -288,73 +352,64 @@
 
     var itemLine = o.itemName ? ('<div class="now-msg" style="margin-top:10px">주문한 것: <b>' + o.itemName + '</b></div>') : '';
 
-    // 금액 안내 (금액안내 단계이고 아직 도착 전) — 후불이라 아직 낼 필요 없음
     var quoteHtml = '';
     if (o.status === 'quoted' && o.price != null) {
-      quoteHtml = '<div class="quote-card"><div class="q-label">이 금액이에요</div>' +
-        '<div class="q-amount">' + money(total(o)) + '</div>' +
-        '<div class="q-note">지금 안 내셔도 돼요.\n물건 받으신 다음에 내시면 돼요. (후불)</div></div>';
+      quoteHtml = '<div class="quote-card"><div class="q-label">이 금액이에요</div><div class="q-amount">' + won(payTotal(o)) + '</div>' +
+        '<div class="q-note">지금 안 내셔도 돼요.\n물건 받으신 다음에 내시면 돼요. (후불)' + (Store.freeMode() ? '\n이용료(심부름비)는 없어요.' : '') + '</div></div>';
     }
 
-    // 결제 안내 (도착/완료)
     var payHtml = '';
     if (o.status === 'arrived' || o.status === 'done') {
-      var p = Store.profile();
       var head = o.status === 'done' ? '입금 고맙습니다 ✅' : '이렇게 넣어주세요';
       if (o.price != null) {
-        payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3>' +
-          '<div class="pay-row"><span>물건값</span><span>' + money(o.price) + '</span></div>' +
-          '<div class="pay-row"><span>수수료</span><span>' + money(o.fee || 0) + '</span></div>' +
-          '<div class="pay-row total"><span>모두</span><span>' + money(total(o)) + '</span></div>' +
-          '<div class="pay-acct">' + Store.shopAccount() + '</div></div>';
+        var rows = '<div class="pay-row"><span>물건값</span><span>' + won(o.price) + '</span></div>';
+        if (!Store.freeMode() && o.fee) rows += '<div class="pay-row"><span>심부름비</span><span>' + won(o.fee) + '</span></div>';
+        payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3>' + rows +
+          '<div class="pay-row total"><span>모두</span><span>' + won(payTotal(o)) + '</span></div>' +
+          '<div class="pay-acct">' + Store.shopAccount() + '</div>' +
+          (Store.freeMode() ? '<div class="free-note">💚 이용료 없이 물건값만 받아요</div>' : '') + '</div>';
       } else {
-        payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3><div class="pay-row"><span>금액은 곧 전화로 알려드려요</span></div><div class="pay-acct">' + p.account + '</div></div>';
+        payHtml = '<div class="pay-card"><h3>💳 ' + head + '</h3><div class="pay-row"><span>금액은 곧 전화로 알려드려요</span></div><div class="pay-acct">' + Store.shopAccount() + '</div></div>';
       }
     }
 
-    // 취소: 구매 전이면 취소요청 버튼 / 이미 요청됐으면 안내 / 진행된 주문은 없음
     var cancelHtml = '';
     if (o.status !== 'canceled') {
-      if (o.cancelRequested) {
-        cancelHtml = '<div class="cancel-box"><div class="cb-t">🚫 취소 요청됐어요</div>' +
-          '<div class="cb-m">전화로 확인하고\n취소해드릴게요.</div></div>';
-      } else if (Store.cancelable(o.status)) {
-        cancelHtml = '<button class="cancel-req-btn" id="cancelReqBtn">주문을 취소하고 싶어요</button>' +
-          '<div class="cb-note">취소는 전화로 확인한 뒤 처리해드려요</div>';
-      }
+      if (o.cancelRequested) cancelHtml = '<div class="cancel-box"><div class="cb-t">🚫 취소 요청됐어요</div><div class="cb-m">전화로 확인하고\n취소해드릴게요.</div></div>';
+      else if (Store.cancelable(o.status)) cancelHtml = '<button class="cancel-req-btn" id="cancelReqBtn">주문을 취소하고 싶어요</button><div class="cb-note">취소는 전화로 확인한 뒤 처리해드려요</div>';
     }
 
-    $('detailBody').innerHTML =
-      '<img class="detail-photo" src="' + o.photo + '" alt="주문한 사진">' + stepHtml +
+    $('detailBody').innerHTML = '<img class="detail-photo" src="' + o.photo + '" alt="주문한 사진">' + stepHtml +
       '<div class="now-card"><div class="big-emoji">' + s.emoji + '</div><div class="now-title">' + s.userLabel + '</div>' +
       '<div class="now-msg">' + s.userMsg + '</div>' + itemLine + '</div>' + quoteHtml + payHtml + cancelHtml;
-    $('detail').classList.add('on'); window.scrollTo(0, 0); $('detail').scrollTop = 0; currentDetailId = id;
+    openScreen('detail'); currentDetailId = id;
 
     var crb = $('cancelReqBtn');
     if (crb) crb.addEventListener('click', function () {
-      if (confirm('주문을 취소하고 싶으세요?\n전화로 확인한 뒤 취소해드려요.')) {
-        Store.update(id, { cancelRequested: true });
-        toast('취소 요청이 들어갔어요. 전화로 확인해드릴게요.');
-        openDetail(id);
-      }
+      if (confirm('주문을 취소하고 싶으세요?\n전화로 확인한 뒤 취소해드려요.')) { Store.update(id, { cancelRequested: true }); toast('취소 요청이 들어갔어요. 전화로 확인해드릴게요.'); openDetail(id); }
     });
   }
-  $('backBtn').addEventListener('click', function () { $('detail').classList.remove('on'); currentDetailId = null; render(); });
 
-  var toastTimer = null;
-  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2200); }
+  // ── 보호자 보기 (읽기 전용) ──
+  function renderGuardian() {
+    var p = Store.profile();
+    var all = Store.orders();
+    var head = '<div class="info-card" style="text-align:left"><b>' + (p.name || '어르신') + '</b> 님의 주문 현황이에요.<br><span style="font-size:19px;color:#78716c">가족이 확인하는 화면 (읽기 전용)</span></div>';
+    var listHtml = all.length ? all.map(cardHtml).join('') : '<div class="empty">주문이 없어요</div>';
+    $('guardianBody').innerHTML = head + '<div style="margin-top:14px">' + listHtml + '</div>';
+    var cards = $('guardianBody').querySelectorAll('.card');
+    for (var i = 0; i < cards.length; i++) cards[i].addEventListener('click', function () { openDetail(this.getAttribute('data-id')); });
+  }
 
-  // ── 최초 등록 (처음 한 번 이름·연락처·주소) ──
+  // ── 등록 ──
   function showRegister(edit) {
     var p = Store.profile();
-    $('r-name').value = edit ? (p.name || '') : '';
-    $('r-phone').value = edit ? (p.phone || '') : '';
-    $('r-addr1').value = edit ? (p.addr1 || '') : '';
-    $('r-addr2').value = edit ? (p.addr2 || '') : '';
-    $('regTitle').innerHTML = edit ? '내 정보 고치기' : '손주마켓에 오신 걸<br>환영해요 🎉';
-    $('regSub').innerHTML = edit ? '주소나 연락처가 바뀌면<br>여기서 고치세요.' : '딱 한 번만 적어주세요.<br>다음부터는 사진만 올리면<br>이 주소로 보내드려요.';
+    $('r-name').value = edit ? (p.name || '') : ''; $('r-phone').value = edit ? (p.phone || '') : '';
+    $('r-addr1').value = edit ? (p.addr1 || '') : ''; $('r-addr2').value = edit ? (p.addr2 || '') : '';
+    $('regTitle').innerHTML = edit ? '내 정보 고치기' : '어르신 구매<br>도움센터예요 💚';
+    $('regSub').innerHTML = edit ? '주소나 연락처가 바뀌면<br>여기서 고치세요.' : '딱 한 번만 적어주세요.<br>다음부터는 사진만 보내면<br>이 주소로 보내드려요.';
     $('regCancel').style.display = edit ? 'block' : 'none';
-    $('reg').classList.add('on'); window.scrollTo(0, 0); $('reg').scrollTop = 0;
+    openScreen('reg');
   }
   $('regBtn').addEventListener('click', function () {
     var name = $('r-name').value.trim(), phone = $('r-phone').value.trim(), a1 = $('r-addr1').value.trim(), a2 = $('r-addr2').value.trim();
@@ -362,16 +417,16 @@
     if (!phone) { toast('전화번호를 적어주세요'); return; }
     if (!a1) { toast('집 주소를 적어주세요'); return; }
     Store.saveProfile({ name: name, phone: phone, address: (a1 + ' ' + a2).trim(), addr1: a1, addr2: a2 });
-    $('reg').classList.remove('on');
-    toast('저장했어요! 이제 사진만 올리면 돼요 👍');
-    render();
+    closeScreen('reg'); toast('저장했어요! 이제 사진만 보내면 돼요 👍'); render();
   });
-  $('regCancel').addEventListener('click', function () { $('reg').classList.remove('on'); });
+  $('regCancel').addEventListener('click', function () { closeScreen('reg'); });
   $('editInfoBtn').addEventListener('click', function () { showRegister(true); });
 
-  Store.onChange(function () { render(); if (currentDetailId && $('detail').classList.contains('on')) openDetail(currentDetailId); });
+  var toastTimer = null;
+  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, 2200); }
+
+  Store.onChange(function () { render(); if (currentDetailId && $('detail').classList.contains('on')) openDetail(currentDetailId); if ($('guardian').classList.contains('on')) renderGuardian(); });
   Store.init();
-  // 처음이면 등록 화면 (다음 틱에 확실히 실행)
   function gateRegister() { if (!Store.isRegistered()) showRegister(false); }
   gateRegister();
   window.addEventListener('load', gateRegister);

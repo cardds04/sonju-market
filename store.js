@@ -8,7 +8,10 @@
   var API_BASE = '';
 
   // 우리가 입금받는 계좌 (고객 정보와 별개, 가게 고정값)
-  var SHOP_ACCOUNT = '농협 123-4567-8901 (손주마켓)';
+  var SHOP_ACCOUNT = '농협 123-4567-8901 (도움센터)';
+
+  // 무료로 시작 (나중에 유료 전환 시 false 로만 바꾸면 수수료가 켜짐)
+  var FREE_MODE = true;
 
   var CACHE_KEY = 'sonju_cache_v2';
   var PROFILE_KEY = 'sonju_profile_v1';
@@ -84,6 +87,7 @@
     isRegistered: function () { try { return !!localStorage.getItem(PROFILE_KEY); } catch (e) { return false; } },
     profile: function () { return currentProfile(); },
     shopAccount: function () { return SHOP_ACCOUNT; },
+    freeMode: function () { return FREE_MODE; },
     saveProfile: function (p) {
       profileCache = p; try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (e) {}
       if (API_BASE) api('/api/profile', { method: 'PUT', body: JSON.stringify(p) }).catch(function () {});

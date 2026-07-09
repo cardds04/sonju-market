@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>구매 도움센터 간편 시안</title>
+<style>
+  * { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: #f2eee6;
+    color: #15191c;
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  .phone {
+    width: 100%;
+    max-width: 440px;
+    min-height: 100vh;
+    margin: 0 auto;
+    background: #fffaf1;
+  }
+  .top {
+    padding: calc(18px + env(safe-area-inset-top)) 22px 14px;
+    border-bottom: 1px solid #e8dfd0;
+  }
+  .name {
+    margin: 0;
+    color: #173f3b;
+    font-size: 25px;
+    line-height: 1.25;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+  .subname {
+    margin-top: 6px;
+    color: #6b7280;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  main {
+    padding: 30px 22px calc(112px + env(safe-area-inset-bottom));
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 15px;
+    border-radius: 999px;
+    background: #e4f4ee;
+    color: #176055;
+    font-size: 18px;
+    font-weight: 900;
+  }
+  h1 {
+    margin: 22px 0 14px;
+    color: #111827;
+    font-size: 39px;
+    line-height: 1.22;
+    font-weight: 950;
+    letter-spacing: 0;
+  }
+  .lead {
+    margin: 0;
+    color: #4b5563;
+    font-size: 24px;
+    line-height: 1.42;
+    font-weight: 850;
+  }
+  .main-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 88px;
+    margin-top: 30px;
+    border: 0;
+    border-radius: 20px;
+    background: #fee500;
+    color: #111;
+    font-size: 27px;
+    font-weight: 950;
+    text-decoration: none;
+    box-shadow: 0 12px 24px rgba(66, 51, 0, .16);
+  }
+  .second-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 74px;
+    margin-top: 14px;
+    border: 2px solid #bdd8d1;
+    border-radius: 18px;
+    background: #fff;
+    color: #173f3b;
+    font-size: 24px;
+    font-weight: 950;
+    text-decoration: none;
+  }
+  .one-line {
+    margin: 20px 4px 0;
+    color: #176055;
+    font-size: 21px;
+    line-height: 1.42;
+    font-weight: 950;
+    text-align: center;
+  }
+  .section {
+    margin: 96px -22px 0;
+    padding: 26px 22px;
+    background: #eef8f5;
+    border-top: 1px solid #d4e9e3;
+    border-bottom: 1px solid #d4e9e3;
+  }
+  .section h2 {
+    margin: 0 0 18px;
+    color: #173f3b;
+    font-size: 28px;
+    line-height: 1.25;
+    font-weight: 950;
+  }
+  .big-step {
+    min-height: 126px;
+    padding: 22px 20px;
+    border-radius: 22px;
+    background: #fffaf1;
+    border: 2px solid #cfe2dc;
+  }
+  .big-step + .big-step { margin-top: 14px; }
+  .step-top {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  .num {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    background: #2f756b;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    font-weight: 950;
+    flex: 0 0 auto;
+  }
+  .big-step strong {
+    color: #121a1d;
+    font-size: 27px;
+    line-height: 1.2;
+    font-weight: 950;
+  }
+  .big-step p {
+    margin: 12px 0 0;
+    color: #5b6570;
+    font-size: 21px;
+    line-height: 1.35;
+    font-weight: 800;
+  }
+  .mini-list {
+    margin-top: 34px;
+  }
+  .mini-list h2 {
+    margin: 0 0 14px;
+    color: #173f3b;
+    font-size: 27px;
+    font-weight: 950;
+  }
+  .mini {
+    display: flex;
+    align-items: center;
+    min-height: 74px;
+    padding: 0 18px;
+    border-radius: 18px;
+    background: #fff;
+    border: 2px solid #ece2d5;
+    color: #1f2937;
+    font-size: 23px;
+    font-weight: 950;
+  }
+  .mini + .mini { margin-top: 10px; }
+  .bottom {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: min(440px, 100vw);
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 250, 241, .96);
+    border-top: 1px solid #e8dfd0;
+    backdrop-filter: blur(12px);
+  }
+  .bottom a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 66px;
+    border-radius: 18px;
+    background: #2f756b;
+    color: #fff;
+    text-decoration: none;
+    font-size: 23px;
+    font-weight: 950;
+  }
+  @media (max-width: 380px) {
+    .name { font-size: 22px; }
+    h1 { font-size: 34px; }
+    .lead { font-size: 22px; }
+    .main-btn { font-size: 25px; }
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <header class="top">
+      <h1 class="name">구매 도움센터</h1>
+      <div class="subname">어르신 지원</div>
+    </header>
+
+    <main>
+      <section aria-labelledby="hero-title">
+        <div class="badge">이용료 없음</div>
+        <h1 id="hero-title">캡쳐해서<br>카톡으로<br>보내세요</h1>
+        <p class="lead">주문은<br>도와드려요.</p>
+        <a class="main-btn" href="#">카톡 보내기</a>
+        <a class="second-btn" href="#">상황 보기</a>
+        <p class="one-line">주문 전 확인</p>
+      </section>
+
+      <section class="section" aria-labelledby="simple-title">
+        <h2 id="simple-title">3단계</h2>
+        <div class="big-step">
+          <div class="step-top">
+            <div class="num">1</div>
+            <strong>캡쳐</strong>
+          </div>
+          <p>화면을 찍어요.</p>
+        </div>
+        <div class="big-step">
+          <div class="step-top">
+            <div class="num">2</div>
+            <strong>카톡</strong>
+          </div>
+          <p>보내주세요.</p>
+        </div>
+        <div class="big-step">
+          <div class="step-top">
+            <div class="num">3</div>
+            <strong>택배</strong>
+          </div>
+          <p>집에서 받아요.</p>
+        </div>
+      </section>
+
+      <section class="mini-list" aria-labelledby="help-title">
+        <h2 id="help-title">필요할 때</h2>
+        <div class="mini">반품 도움</div>
+        <div class="mini">보호자 보기</div>
+      </section>
+    </main>
+
+    <div class="bottom">
+      <a href="#">카톡 도움</a>
+    </div>
+  </div>
+</body>
+</html>

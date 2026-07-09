@@ -1,7 +1,7 @@
 {
-  "name": "손주마켓",
-  "short_name": "손주마켓",
-  "description": "사진만 보내면 대신 사드려요",
+  "name": "어르신 구매 도움센터",
+  "short_name": "구매 도움센터",
+  "description": "캡쳐해서 보내면 어려운 주문을 도와드려요",
   "start_url": "app.html",
   "scope": "./",
   "display": "standalone",
